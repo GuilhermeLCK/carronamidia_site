@@ -82,7 +82,6 @@ const CarGrid = ({ filters }: CarGridProps) => {
 
     if (!filters.showAll) {
       filtered = filtered.filter((car) => {
-        if (filters.isSemiNovo && car.isSemiNovo) return true;
         if (filters.isZeroKm && car.isZeroKm) return true;
         if (filters.isConsignment && car.isConsignment) return true;
         return false;
@@ -103,11 +102,11 @@ const CarGrid = ({ filters }: CarGridProps) => {
           <CarIcon className="h-6 w-6 xs:h-5 xs:w-5 text-primary" />
           <div className="h-6 bg-gray-300 rounded w-48 animate-pulse"></div>
         </div>
-        
+
         <div className="mb-6">
           <div className="h-8 bg-gray-300 rounded w-64 animate-pulse mb-4"></div>
         </div>
-        
+
         <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {Array.from({ length: 6 }).map((_, index) => (
             <CarCardSkeleton key={index} />
@@ -214,7 +213,7 @@ const VirtualizedCarGrid = ({ cars }: VirtualizedCarGridProps) => {
           loadMoreCars();
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
+      { threshold: 0.1, rootMargin: "100px" }
     );
 
     if (loadMoreRef.current) {
@@ -226,12 +225,12 @@ const VirtualizedCarGrid = ({ cars }: VirtualizedCarGridProps) => {
 
   const loadMoreCars = async () => {
     if (page >= totalPages || isLoadingMore) return;
-    
+
     setIsLoadingMore(true);
-    
+
     // Simulate loading delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 300));
-    
+    await new Promise((resolve) => setTimeout(resolve, 300));
+
     const nextPage = page + 1;
     const endIndex = nextPage * itemsPerPage;
     const newItems = cars.slice(0, endIndex);
@@ -265,7 +264,10 @@ const VirtualizedCarGrid = ({ cars }: VirtualizedCarGridProps) => {
 
       {/* Load more trigger (invisible) */}
       {page < totalPages && (
-        <div ref={loadMoreRef} className="h-10 flex justify-center items-center mt-8">
+        <div
+          ref={loadMoreRef}
+          className="h-10 flex justify-center items-center mt-8"
+        >
           {!isLoadingMore && (
             <Button
               onClick={loadMoreCars}
@@ -273,7 +275,8 @@ const VirtualizedCarGrid = ({ cars }: VirtualizedCarGridProps) => {
               className="flex items-center gap-2"
             >
               <RefreshCw className="h-4 w-4" />
-              Carregar mais veículos ({cars.length - visibleCars.length} restantes)
+              Carregar mais veículos ({cars.length - visibleCars.length}{" "}
+              restantes)
             </Button>
           )}
         </div>

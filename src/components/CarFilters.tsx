@@ -30,7 +30,6 @@ export interface CarFilters {
   fuelType: string;
   transmission: string;
   isShielding: boolean | undefined;
-  isSemiNovo: boolean;
   isZeroKm: boolean;
   isConsignment: boolean;
   showAll: boolean;
@@ -49,7 +48,6 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     fuelType: "",
     transmission: "",
     isShielding: undefined,
-    isSemiNovo: false,
     isZeroKm: false,
     isConsignment: false,
     showAll: true,
@@ -77,34 +75,24 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     onFilterChange(newFilters);
   };
 
-  const handleTagFilter = (
-    tag: "isSemiNovo" | "isZeroKm" | "isConsignment" | "showAll"
-  ) => {
+  const handleTagFilter = (tag: "isZeroKm" | "isConsignment" | "showAll") => {
     let newFilters = { ...filters };
 
     if (tag === "showAll") {
       newFilters = {
         ...filters,
-        isSemiNovo: false,
         isZeroKm: false,
         isConsignment: false,
         showAll: true,
       };
     } else {
+      // Desativar todos os outros filtros e ativar apenas o selecionado
       newFilters = {
         ...filters,
-        [tag]: !filters[tag],
+        isZeroKm: tag === "isZeroKm",
+        isConsignment: tag === "isConsignment",
         showAll: false,
       };
-
-      // Se nenhum filtro específico estiver ativo, ativar "showAll"
-      if (
-        !newFilters.isSemiNovo &&
-        !newFilters.isZeroKm &&
-        !newFilters.isConsignment
-      ) {
-        newFilters.showAll = true;
-      }
     }
 
     setFilters(newFilters);
@@ -122,7 +110,6 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
       fuelType: "",
       transmission: "",
       isShielding: undefined,
-      isSemiNovo: false,
       isZeroKm: false,
       isConsignment: false,
       showAll: true,
@@ -131,16 +118,6 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     onFilterChange(emptyFilters);
   };
 
-  const brands = [
-    "Audi",
-    "BMW",
-    "Mercedes-Benz",
-    "Porsche",
-    "Ferrari",
-    "Lamborghini",
-    "McLaren",
-    "Tesla",
-  ];
   const years = Array.from({ length: 15 }, (_, i) =>
     (new Date().getFullYear() - i).toString()
   );
@@ -192,35 +169,27 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
                 Estoque Completo
               </Button>
             </div>
-            
-            {/* Outras 3 tags lado a lado no mobile */}
-            <div className="grid grid-cols-3 md:grid-cols-4 gap-2 xs:gap-1 md:gap-4">
+
+            {/* Outras 2 tags lado a lado no mobile */}
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 xs:gap-1 md:gap-4">
               <div className="md:col-start-2">
                 <Button
-                   variant={filters.isSemiNovo ? "default" : "outline"}
-                   size="sm"
-                   onClick={() => handleTagFilter("isSemiNovo")}
-                   className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-                 >
-                   Semi Novo
-                 </Button>
+                  variant={filters.isZeroKm ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleTagFilter("isZeroKm")}
+                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Zero KM
+                </Button>
               </div>
               <Button
-                 variant={filters.isZeroKm ? "default" : "outline"}
-                 size="sm"
-                 onClick={() => handleTagFilter("isZeroKm")}
-                 className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-               >
-                 Zero KM
-               </Button>
-              <Button
-                 variant={filters.isConsignment ? "default" : "outline"}
-                 size="sm"
-                 onClick={() => handleTagFilter("isConsignment")}
-                 className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-               >
-                 Consignação
-               </Button>
+                variant={filters.isConsignment ? "default" : "outline"}
+                size="sm"
+                onClick={() => handleTagFilter("isConsignment")}
+                className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                Repasse
+              </Button>
             </div>
           </div>
 
@@ -229,7 +198,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
             <div className="relative">
               <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
               <Input
-                placeholder="Buscar por título do veículo..."
+                placeholder="Buscar por modelo do veículo..."
                 value={filters.searchTerm}
                 onChange={(e) =>
                   handleFilterChange("searchTerm", e.target.value)

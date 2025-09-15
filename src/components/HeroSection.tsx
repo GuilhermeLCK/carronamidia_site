@@ -55,7 +55,7 @@ const HeroSection = () => {
       ref={sectionRef}
       className="relative min-h-[70vh] xs:min-h-[40vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-4 md:py-12 px-4"
     >
-      <div className="w-full max-w-6xl xs:max-w-full xs:px-2 md:max-w-6xl mx-auto">
+      <div className="w-full max-w-6xl xs:w-[99%] xs:px-2 md:max-w-6xl mx-auto">
         <div className="relative aspect-video xs:aspect-[16/10] md:aspect-video overflow-hidden rounded-lg xs:rounded-none md:rounded-xl transition-all duration-700 transform hover:scale-[1.02]">
           {/* Loading skeleton */}
           {!isLoaded && (
