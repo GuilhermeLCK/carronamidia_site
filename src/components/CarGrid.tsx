@@ -74,6 +74,12 @@ const CarGrid = ({ filters }: CarGridProps) => {
       );
     }
 
+    if (filters.category) {
+      filtered = filtered.filter((car) =>
+        car.category?.toLowerCase().includes(filters.category.toLowerCase())
+      );
+    }
+
     if (filters.isShielding !== undefined) {
       filtered = filtered.filter(
         (car) => car.isShielding === filters.isShielding

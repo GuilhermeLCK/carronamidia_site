@@ -29,6 +29,7 @@ export interface CarFilters {
   searchTerm: string;
   fuelType: string;
   transmission: string;
+  category: string;
   isShielding: boolean | undefined;
   isZeroKm: boolean;
   isConsignment: boolean;
@@ -47,6 +48,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     searchTerm: "",
     fuelType: "",
     transmission: "",
+    category: "",
     isShielding: undefined,
     isZeroKm: false,
     isConsignment: false,
@@ -109,6 +111,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
       searchTerm: "",
       fuelType: "",
       transmission: "",
+      category: "",
       isShielding: undefined,
       isZeroKm: false,
       isConsignment: false,
@@ -152,27 +155,31 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
           </Button>
         </div>
 
-        {/* Filtros Rápidos por Tags - Sempre Visíveis */}
+        {/* Filtros Rápidos por Tags */}
         <div className="mb-6">
           <h3 className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-4 xs:mb-2 md:mb-5 text-center">
             Filtros Rápidos
           </h3>
-          <div className="max-w-4xl mx-auto">
-            {/* Estoque Completo - Largura total no mobile */}
-            <div className="mb-3 xs:mb-2 md:mb-0">
-              <Button
-                variant={filters.showAll ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleTagFilter("showAll")}
-                className="w-full md:w-auto h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-              >
-                Estoque Completo
-              </Button>
-            </div>
-
-            {/* Outras 2 tags lado a lado no mobile */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 xs:gap-1 md:gap-4">
-              <div className="md:col-start-2">
+          <div
+            className={`max-w-4xl mx-auto ${
+              isSticky ? "xs:hidden md:block" : ""
+            }`}
+          >
+            {/* Layout mobile: Estoque Completo em cima, outras 2 lado a lado */}
+            {/* Layout desktop: todas as 3 lado a lado */}
+            <div className="flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4">
+              <div className="md:flex-1">
+                <Button
+                  variant={filters.showAll ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleTagFilter("showAll")}
+                  className="w-full h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Estoque Completo
+                </Button>
+              </div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-2 gap-2 xs:gap-1 md:gap-4 md:flex-1">
                 <Button
                   variant={filters.isZeroKm ? "default" : "outline"}
                   size="sm"
@@ -181,15 +188,15 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
                 >
                   Zero KM
                 </Button>
+                <Button
+                  variant={filters.isConsignment ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleTagFilter("isConsignment")}
+                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Repasse
+                </Button>
               </div>
-              <Button
-                variant={filters.isConsignment ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleTagFilter("isConsignment")}
-                className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-              >
-                Repasse
-              </Button>
             </div>
           </div>
 
@@ -296,17 +303,71 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
                 </SelectContent>
               </Select>
 
+              {/* Category */}
+              <Select
+                value={filters.category}
+                onValueChange={(value) => handleFilterChange("category", value)}
+              >
+                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-lg">
+                  <SelectValue placeholder="Categoria" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem
+                    value="SUV de Grande Porte"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    SUV de Grande Porte
+                  </SelectItem>
+                  <SelectItem
+                    value="SUV de Médio Porte"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    SUV de Médio Porte
+                  </SelectItem>
+                  <SelectItem
+                    value="SUV Compacto"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    SUV Compacto
+                  </SelectItem>
+                  <SelectItem
+                    value="Picape Media"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Picape Media
+                  </SelectItem>
+                  <SelectItem
+                    value="Picape Intermediaria"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Picape Intermediaria
+                  </SelectItem>
+                  <SelectItem
+                    value="Utilitarios"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Utilitarios
+                  </SelectItem>
+                  <SelectItem
+                    value="Sedan Medio"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Sedan Medio
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+
               {/* Shielding */}
               <Select
                 value={
                   filters.isShielding === undefined
-                    ? "todos"
+                    ? ""
                     : filters.isShielding
                     ? "true"
                     : "false"
                 }
                 onValueChange={(value) => {
-                  if (value === "todos") {
+                  if (value === "") {
                     handleFilterChange("isShielding", undefined);
                   } else {
                     handleFilterChange("isShielding", value === "true");
@@ -318,22 +379,16 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
-                    value="todos"
-                    className="text-base xs:text-xs md:text-lg"
-                  >
-                    Todos
-                  </SelectItem>
-                  <SelectItem
                     value="true"
                     className="text-base xs:text-xs md:text-lg"
                   >
-                    Blindagem - Sim
+                    Com Blindagem
                   </SelectItem>
                   <SelectItem
                     value="false"
                     className="text-base xs:text-xs md:text-lg"
                   >
-                    Blindagem - Não
+                    Sem Blindagem
                   </SelectItem>
                 </SelectContent>
               </Select>
