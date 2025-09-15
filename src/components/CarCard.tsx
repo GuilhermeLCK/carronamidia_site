@@ -112,7 +112,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
           car.isSemiNovo && "Semi Novo",
         ].filter(Boolean);
         if (tags.length >= 3) return "xs:h-36";
-        if (tags.length === 1) return "xs:h-24";
+        if (tags.length === 1) return "xs:h-28";
         return "xs:h-32";
       })()} md:h-[500px]`}
     >
@@ -126,7 +126,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
             car.isSemiNovo && "Semi Novo",
           ].filter(Boolean);
           if (tags.length >= 3) return "xs:h-36";
-          if (tags.length === 1) return "xs:h-24";
+          if (tags.length === 1) return "xs:h-28";
           return "xs:h-32";
         })()} md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full`}
       >
@@ -186,7 +186,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                     <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 min-h-4">
                       {car.isShielding && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -196,7 +196,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.isZeroKm && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -206,7 +206,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.isConsignment && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -216,7 +216,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.inPreparation && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -226,7 +226,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -241,7 +241,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                     <div className="flex flex-wrap gap-0.5 xs:gap-0.5 md:gap-1 mb-2 xs:mb-1 md:mb-3 min-h-4 max-w-full">
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-purple-500 text-white text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -252,7 +252,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
 
                       {car.isShielding && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -262,7 +262,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.isZeroKm && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -272,7 +272,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.isConsignment && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -282,7 +282,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                       )}
                       {car.inPreparation && (
                         <Badge
-                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
