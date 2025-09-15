@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Settings, Star, Truck, Shield, Eye } from "lucide-react";
-import { useEffect } from "react";
+import { memo } from "react";
 import OptimizedImage from "./OptimizedImage";
 import { generateCarLink } from "@/utils/urlUtils";
 
@@ -52,7 +52,7 @@ interface CarCardProps {
   car: Car;
 }
 
-export default function CarCard({ car }: CarCardProps) {
+const CarCard = memo(function CarCard({ car }: CarCardProps) {
   const formatCurrency = (value: string | number): string => {
     try {
       if (!value || value === "" || value === "0") return "Consulte";
@@ -101,25 +101,15 @@ export default function CarCard({ car }: CarCardProps) {
     return firstImage.url || firstImage.base64 || "/placeholder.svg";
   };
 
-  const preloadImage = (url: string) => {
-    const img = new Image();
-    img.src = url;
-  };
-
-  useEffect(() => {
-    const imageUrl = getFirstImageUrl();
-    if (imageUrl !== "/placeholder.svg") {
-      preloadImage(imageUrl);
-    }
-  }, []);
+  // Removed preloadImage as OptimizedImage now handles lazy loading
 
   return (
     <Card className="group relative overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col xs:flex-row md:flex-col xs:h-28 md:h-[500px]">
-      <div className="relative  xs:h-28 md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full">
+      <div className="relative xs:h-28 md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full">
         <OptimizedImage
           src={getFirstImageUrl()}
           alt={car.title}
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
         />
 
         {isRecentlyAdded() && (
@@ -189,4 +179,6 @@ export default function CarCard({ car }: CarCardProps) {
       </CardContent>
     </Card>
   );
-}
+});
+
+export default CarCard;

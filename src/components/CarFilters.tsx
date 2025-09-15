@@ -180,39 +180,48 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
           <h3 className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-4 xs:mb-2 md:mb-5 text-center">
             Filtros Rápidos
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 xs:gap-1 md:gap-4 max-w-4xl mx-auto">
-            <Button
-              variant={filters.showAll ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleTagFilter("showAll")}
-              className="h-12 xs:h-8 md:h-14 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              Estoque Completo
-            </Button>
-            <Button
-              variant={filters.isSemiNovo ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleTagFilter("isSemiNovo")}
-              className="h-12 xs:h-8 md:h-14 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white"
-            >
-              Semi Novo
-            </Button>
-            <Button
-              variant={filters.isZeroKm ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleTagFilter("isZeroKm")}
-              className="h-12 xs:h-8 md:h-14 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-gradient-to-r hover:from-green-500 hover:to-green-600 hover:text-white"
-            >
-              Zero KM
-            </Button>
-            <Button
-              variant={filters.isConsignment ? "default" : "outline"}
-              size="sm"
-              onClick={() => handleTagFilter("isConsignment")}
-              className="h-12 xs:h-8 md:h-14 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md bg-gradient-to-r hover:from-orange-500 hover:to-orange-600 hover:text-white"
-            >
-              Consignação
-            </Button>
+          <div className="max-w-4xl mx-auto">
+            {/* Estoque Completo - Largura total no mobile */}
+            <div className="mb-3 xs:mb-2 md:mb-0">
+              <Button
+                variant={filters.showAll ? "default" : "outline"}
+                size="sm"
+                onClick={() => handleTagFilter("showAll")}
+                className="w-full md:w-auto h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+              >
+                Estoque Completo
+              </Button>
+            </div>
+            
+            {/* Outras 3 tags lado a lado no mobile */}
+            <div className="grid grid-cols-3 md:grid-cols-4 gap-2 xs:gap-1 md:gap-4">
+              <div className="md:col-start-2">
+                <Button
+                   variant={filters.isSemiNovo ? "default" : "outline"}
+                   size="sm"
+                   onClick={() => handleTagFilter("isSemiNovo")}
+                   className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                 >
+                   Semi Novo
+                 </Button>
+              </div>
+              <Button
+                 variant={filters.isZeroKm ? "default" : "outline"}
+                 size="sm"
+                 onClick={() => handleTagFilter("isZeroKm")}
+                 className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+               >
+                 Zero KM
+               </Button>
+              <Button
+                 variant={filters.isConsignment ? "default" : "outline"}
+                 size="sm"
+                 onClick={() => handleTagFilter("isConsignment")}
+                 className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+               >
+                 Consignação
+               </Button>
+            </div>
           </div>
 
           {/* Campo de Busca Rápida por Título */}
