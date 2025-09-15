@@ -111,7 +111,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
           car.inPreparation && "Em Preparação",
           car.isSemiNovo && "Semi Novo",
         ].filter(Boolean);
-        if (tags.length >= 3) return "xs:h-36";
+        if (tags.length >= 3) return "xs:h-32";
         if (tags.length === 1) return "xs:h-24";
         return "xs:h-32";
       })()} md:h-[500px]`}
@@ -125,7 +125,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
             car.inPreparation && "Em Preparação",
             car.isSemiNovo && "Semi Novo",
           ].filter(Boolean);
-          if (tags.length >= 3) return "xs:h-36";
+          if (tags.length >= 3) return "xs:h-32";
           if (tags.length === 1) return "xs:h-24";
           return "xs:h-32";
         })()} md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full`}
