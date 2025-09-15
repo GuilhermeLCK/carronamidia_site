@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Premium Car Dealer Design System - All colors MUST be HSL */
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 15%;
+
+    --primary: 0 84% 50%;
+    --primary-foreground: 210 40% 98%;
+    --primary-glow: 0 84% 60%;
+
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 15%;
+
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 0 0% 0%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 0 0% 85%;
+    --input: 0 0% 95%;
+    --ring: 0 84% 50%;
+
+    --radius: 0.75rem;
+
+    /* Premium gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 98%), hsl(0 0% 92%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 96%));
+
+    /* Shadows */
+    --shadow-elegant: 0 25px 50px -12px hsl(var(--primary) / 0.25);
+    --shadow-card: 0 10px 30px -5px hsl(210 11% 4% / 0.5);
+    --shadow-glow: 0 0 40px hsl(var(--primary-glow) / 0.3);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .light {
+    --background: 0 0% 98%;
+    --foreground: 0 0% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 15%;
+    --primary: 0 84% 50%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 0 0% 90%;
+    --secondary-foreground: 0 0% 15%;
+    --muted: 0 0% 95%;
+    --muted-foreground: 0 0% 45%;
+    --accent: 0 0% 0%;
+    --accent-foreground: 210 40% 98%;
+    --border: 0 0% 85%;
+    --input: 0 0% 95%;
+    --ring: 0 84% 50%;
+    --gradient-primary: linear-gradient(135deg, hsl(0 84% 50%), hsl(0 84% 60%));
+    --gradient-dark: linear-gradient(180deg, hsl(0 0% 98%), hsl(0 0% 92%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 96%));
+    --shadow-elegant: 0 25px 50px -12px hsl(0 84% 50% / 0.15);
+    --shadow-card: 0 10px 30px -5px hsl(210 20% 20% / 0.1);
+    --shadow-glow: 0 0 40px hsl(0 84% 60% / 0.2);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  .hero-video {
+    @apply relative overflow-hidden rounded-2xl;
+  }
+
+  .filter-sticky {
+    @apply sticky top-0 z-50 backdrop-blur-lg bg-background/80 border-b border-border;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .car-card {
+    @apply relative overflow-hidden rounded-xl bg-gradient-to-br from-card to-card/50 backdrop-blur-sm border border-border/50 shadow-card hover:shadow-elegant transition-all duration-500 hover:scale-[1.02] hover:border-primary/30;
+  }
+
+  .car-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500;
+  }
+
+  .car-card:hover::before {
+    @apply opacity-100;
+  }
+
+  .glow-effect {
+    @apply relative;
+  }
+
+  .glow-effect::after {
+    content: '';
+    @apply absolute inset-0 rounded-xl bg-gradient-primary opacity-0 blur-xl transition-opacity duration-500 -z-10;
+  }
+
+  .glow-effect:hover::after {
+    @apply opacity-30;
+  }
+}
