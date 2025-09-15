@@ -106,10 +106,10 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
       className={`group relative overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col xs:flex-row md:flex-col ${(() => {
         const tags = [
           car.isShielding && "Blindado",
-          car.isZeroKm && "Zero",
+          car.isZeroKm && "Zero KM",
           car.isConsignment && "Repasse",
           car.inPreparation && "Em Preparação",
-          car.isSemiNovo && "Semi Novo",
+          car.isSemiNovo && "Semi novo",
         ].filter(Boolean);
         if (tags.length >= 3) return "xs:h-36";
         if (tags.length === 1) return "xs:h-28";
@@ -120,10 +120,10 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
         className={`relative ${(() => {
           const tags = [
             car.isShielding && "Blindado",
-            car.isZeroKm && "Zero",
+            car.isZeroKm && "Zero KM",
             car.isConsignment && "Repasse",
             car.inPreparation && "Em Preparação",
-            car.isSemiNovo && "Semi Novo",
+            car.isSemiNovo && "Semi novo",
           ].filter(Boolean);
           if (tags.length >= 3) return "xs:h-36";
           if (tags.length === 1) return "xs:h-28";
@@ -139,9 +139,9 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
         {isRecentlyAdded() && (
           <div className="absolute top-1 right-1 xs:top-1 xs:right-1 z-10 ">
             <Badge
-              className="bg-green-500 text-white border border-green-400 font-semibold text-xs px-2 py-1 animate-pulse shadow-lg font-mono"
+              className="bg-gradient-to-r from-purple-500 to-orange-500 text-white border border-purple-400 font-semibold text-xs px-2 py-1 shadow-lg font-mono"
               style={{
-                animationDuration: "4s",
+                // animationDuration: "4s",
                 fontFamily: "'Inter', 'Roboto', sans-serif",
               }}
             >
@@ -156,7 +156,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
       <CardContent className="p-2 xs:p-1 xs:w-3/5 xs:flex xs:flex-col xs:justify-between md:w-full md:p-4 relative">
         <div className="xs:flex xs:flex-col xs:h-full xs:justify-between">
           <div>
-            <h3 className="font-medium text-sm xs:text-xs md:text-base text-gray-900 mb-1 xs:mb-0 group-hover:text-primary transition-colors line-clamp-1">
+            <h3 className="font-bold text-sm xs:text-xs md:text-base text-black mb-1 xs:mb-0 group-hover:text-black transition-colors line-clamp-1">
               {car.title}
             </h3>
             <p className="text-xs text-gray-600 mb-2 xs:mb-1 md:mb-2 line-clamp-1">
@@ -167,10 +167,10 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
           {(() => {
             const tags = [
               car.isShielding && "Blindado",
-              car.isZeroKm && "Zero",
+              car.isZeroKm && "Zero KM",
               car.isConsignment && "Repasse",
               car.inPreparation && "Em Preparação",
-              car.isSemiNovo && "Semi Novo",
+              car.isSemiNovo && "Semi novo",
             ].filter(Boolean);
 
             const hasOnlyOneTag = tags.length === 1;
@@ -180,7 +180,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
               <>
                 {hasOnlyOneTag ? (
                   <div className="xs:flex xs:items-center xs:gap-2 md:block mb-2 xs:mb-1 md:mb-3">
-                    <div className="text-lg xs:text-lg  md:text-lg font-bold text-primary md:mb-2">
+                    <div className="text-sm xs:text-sm md:text-sm font-bold text-red-600 md:mb-2">
                       {formatCurrency(car.price || "")}
                     </div>
                     <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 min-h-4">
@@ -201,7 +201,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
                         >
-                          Zero
+                          Zero KM
                         </Badge>
                       )}
                       {car.isConsignment && (
@@ -231,7 +231,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
                         >
-                          Semi Novo
+                          Semi novo
                         </Badge>
                       )}
                     </div>
@@ -246,7 +246,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
                         >
-                          Semi Novo
+                          Semi novo
                         </Badge>
                       )}
 
@@ -267,7 +267,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
                         >
-                          Zero
+                          Zero KM
                         </Badge>
                       )}
                       {car.isConsignment && (
@@ -291,7 +291,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                         </Badge>
                       )}
                     </div>
-                    <div className="text-lg xs:text-lg md:text-lg font-bold text-primary mb-1 xs:mb-0.5">
+                    <div className="text-sm xs:text-sm md:text-sm font-bold text-red-600 mb-1 xs:mb-0.5">
                       {formatCurrency(car.price || "")}
                     </div>
                   </>
