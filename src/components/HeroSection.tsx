@@ -1,6 +1,6 @@
-// import videoPresentation from "@/assets/Video_Apresentacao.mov";
 const videoPresentation =
   "https://firebasestorage.googleapis.com/v0/b/database-img/o/Video_Apresentacao.mov?alt=media";
+
 import { useState, useEffect, useRef } from "react";
 
 const HeroSection = () => {
@@ -53,10 +53,10 @@ const HeroSection = () => {
   return (
     <section
       ref={sectionRef}
-      className="relative min-h-[70vh] xs:min-h-[40vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-4 md:py-12 px-4"
+      className="relative min-h-[70vh] xs:min-h-[35vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4"
     >
-      <div className="w-full max-w-6xl xs:w-[99%] xs:px-2 md:max-w-6xl mx-auto">
-        <div className="relative aspect-video xs:aspect-[16/10] md:aspect-video overflow-hidden rounded-lg xs:rounded-none md:rounded-xl transition-all duration-700 transform hover:scale-[1.02]">
+      <div className="w-full max-w-6xl xs:w-[95%] xs:px-0 md:max-w-6xl mx-auto">
+        <div className="relative aspect-video xs:aspect-[16/10] md:aspect-video overflow-hidden rounded-lg xs:rounded-none md:rounded-xl transition-all duration-700 transform hover:scale-[1.02] xs:pb-12 md:pb-0">
           {/* Loading skeleton */}
           {!isLoaded && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center z-10">
@@ -92,7 +92,7 @@ const HeroSection = () => {
               muted
               loop
               playsInline
-              className={`w-full h-full object-contain transition-opacity duration-500 ${
+              className={`w-full h-full xs:object-fill md:object-contain transition-opacity duration-500 ${
                 isLoaded && !loadError ? "opacity-100" : "opacity-0"
               }`}
               controls

@@ -33,6 +33,7 @@ export interface CarFilters {
   isShielding: boolean | undefined;
   isZeroKm: boolean;
   isConsignment: boolean;
+  isSemiNew: boolean;
   showAll: boolean;
 }
 
@@ -52,19 +53,28 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     isShielding: undefined,
     isZeroKm: false,
     isConsignment: false,
+    isSemiNew: false,
     showAll: true,
   });
 
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const filtersElement = document.getElementById("filters");
-      if (filtersElement) {
-        const rect = filtersElement.getBoundingClientRect();
-        setIsSticky(rect.top <= 0);
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const filtersElement = document.getElementById("filters");
+          if (filtersElement) {
+            const rect = filtersElement.getBoundingClientRect();
+            setIsSticky(rect.top <= 0);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -77,7 +87,9 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     onFilterChange(newFilters);
   };
 
-  const handleTagFilter = (tag: "isZeroKm" | "isConsignment" | "showAll") => {
+  const handleTagFilter = (
+    tag: "isZeroKm" | "isConsignment" | "isSemiNew" | "showAll"
+  ) => {
     let newFilters = { ...filters };
 
     if (tag === "showAll") {
@@ -85,6 +97,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
         ...filters,
         isZeroKm: false,
         isConsignment: false,
+        isSemiNew: false,
         showAll: true,
       };
     } else {
@@ -93,6 +106,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
         ...filters,
         isZeroKm: tag === "isZeroKm",
         isConsignment: tag === "isConsignment",
+        isSemiNew: tag === "isSemiNew",
         showAll: false,
       };
     }
@@ -115,6 +129,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
       isShielding: undefined,
       isZeroKm: false,
       isConsignment: false,
+      isSemiNew: false,
       showAll: true,
     };
     setFilters(emptyFilters);
@@ -165,8 +180,8 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
               isSticky ? "xs:hidden md:block" : ""
             }`}
           >
-            {/* Layout mobile: Estoque Completo em cima, outras 2 lado a lado */}
-            {/* Layout desktop: todas as 3 lado a lado */}
+            {/* Layout mobile: Estoque Completo em cima, outros 3 embaixo */}
+            {/* Layout desktop: todos os 4 lado a lado */}
             <div className="flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4">
               <div className="md:flex-1">
                 <Button
@@ -178,13 +193,21 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
                   Estoque Completo
                 </Button>
               </div>
-              
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-2 xs:gap-1 md:gap-4 md:flex-1">
+
+              <div className="grid grid-cols-3 md:grid-cols-3 gap-2 xs:gap-1 md:gap-4 md:flex-1">
+                <Button
+                  variant={filters.isSemiNew ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleTagFilter("isSemiNew")}
+                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-6 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                >
+                  Semi Novo
+                </Button>
                 <Button
                   variant={filters.isZeroKm ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTagFilter("isZeroKm")}
-                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-6 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Zero KM
                 </Button>
@@ -192,7 +215,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
                   variant={filters.isConsignment ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTagFilter("isConsignment")}
-                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-8 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-6 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Repasse
                 </Button>

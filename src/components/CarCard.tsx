@@ -137,12 +137,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 mb-2 xs:mb-1 md:mb-3">
-            {car.isSemiNovo && (
-              <Badge className="bg-gradient-to-r from-blue-500 to-blue-600 text-white text-xs px-1 py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow">
-                🚗 Semi
-              </Badge>
-            )}
+          <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 mb-2 xs:mb-1 md:mb-3 min-h-4">
             {car.isShielding && (
               <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs px-1 py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow">
                 🛡️ Blindado

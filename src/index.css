@@ -109,33 +109,47 @@
   }
 
   .filter-sticky {
-    @apply sticky top-0 z-50 backdrop-blur-lg bg-background/80 border-b border-border;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    @apply sticky top-0 z-50 bg-background/95 border-b border-border;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: background-color;
+  }
+
+  @media (min-width: 768px) {
+    .filter-sticky {
+      @apply backdrop-blur-lg bg-background/80;
+      will-change: background-color, backdrop-filter;
+    }
   }
 
   .car-card {
-    @apply relative overflow-hidden rounded-xl bg-gradient-to-br from-card to-card/50 backdrop-blur-sm border border-border/50 shadow-card hover:shadow-elegant transition-all duration-500 hover:scale-[1.02] hover:border-primary/30;
+    @apply relative overflow-hidden rounded-xl bg-card border border-border/50 shadow-card transition-colors duration-300;
   }
 
-  .car-card::before {
-    content: '';
-    @apply absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500;
-  }
+  @media (min-width: 768px) {
+    .car-card {
+      @apply bg-gradient-to-br from-card to-card/50 backdrop-blur-sm hover:shadow-elegant transition-all duration-500 hover:scale-[1.02] hover:border-primary/30;
+    }
 
-  .car-card:hover::before {
-    @apply opacity-100;
-  }
+    .car-card::before {
+      content: '';
+      @apply absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500;
+    }
 
-  .glow-effect {
-    @apply relative;
-  }
+    .car-card:hover::before {
+      @apply opacity-100;
+    }
 
-  .glow-effect::after {
-    content: '';
-    @apply absolute inset-0 rounded-xl bg-gradient-primary opacity-0 blur-xl transition-opacity duration-500 -z-10;
-  }
+    .glow-effect {
+      @apply relative;
+    }
 
-  .glow-effect:hover::after {
-    @apply opacity-30;
+    .glow-effect::after {
+      content: '';
+      @apply absolute inset-0 rounded-xl bg-gradient-primary opacity-0 blur-xl transition-opacity duration-500 -z-10;
+    }
+
+    .glow-effect:hover::after {
+      @apply opacity-30;
+    }
   }
 }

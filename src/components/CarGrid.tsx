@@ -90,6 +90,7 @@ const CarGrid = ({ filters }: CarGridProps) => {
       filtered = filtered.filter((car) => {
         if (filters.isZeroKm && car.isZeroKm) return true;
         if (filters.isConsignment && car.isConsignment) return true;
+        if (filters.isSemiNew && car.isSemiNovo) return true;
         return false;
       });
     }
