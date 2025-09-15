@@ -55,9 +55,8 @@ const HeroSection = () => {
       ref={sectionRef}
       className="relative min-h-[70vh] xs:min-h-[35vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4"
     >
-      <div className="w-full max-w-6xl xs:w-[95%] xs:px-0 md:max-w-6xl mx-auto">
+      <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
         <div className="relative aspect-video xs:aspect-[16/10] md:aspect-video overflow-hidden rounded-lg xs:rounded-none md:rounded-xl transition-all duration-700 transform hover:scale-[1.02] xs:pb-12 md:pb-0">
-          {/* Loading skeleton */}
           {!isLoaded && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center z-10">
               <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
@@ -72,8 +71,6 @@ const HeroSection = () => {
               </div>
             </div>
           )}
-
-          {/* Error state */}
           {loadError && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center z-10">
               <div className="text-red-400 text-4xl mb-4">⚠️</div>
@@ -82,8 +79,6 @@ const HeroSection = () => {
               </p>
             </div>
           )}
-
-          {/* Video element with lazy loading */}
           {isInView && (
             <video
               ref={videoRef}

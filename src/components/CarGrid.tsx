@@ -52,13 +52,17 @@ const CarGrid = ({ filters }: CarGridProps) => {
     }
 
     if (filters.searchTerm) {
-      const searchTerm = filters.searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (car) =>
-          car.model.toLowerCase().includes(searchTerm) ||
-          car.brand.toLowerCase().includes(searchTerm) ||
-          car.description?.toLowerCase().includes(searchTerm)
-      );
+      const searchTerms = filters.searchTerm
+        .toLowerCase()
+        .trim()
+        .split(/\s+/)
+        .filter((term) => term.length > 0);
+      filtered = filtered.filter((car) => {
+        const carText = `${car.model || ""} ${car.brand || ""} ${
+          car.description || ""
+        } ${car.title || ""}`.toLowerCase();
+        return searchTerms.every((term) => carText.includes(term));
+      });
     }
 
     if (filters.fuelType) {
@@ -95,8 +99,27 @@ const CarGrid = ({ filters }: CarGridProps) => {
       });
     }
     return filtered.sort((a, b) => {
+      const isRecentlyAdded = (car: any): boolean => {
+        try {
+          if (!car.createdAt) return false;
+          const createdDate = car.createdAt.toDate
+            ? car.createdAt.toDate()
+            : new Date(car.createdAt);
+          const now = new Date();
+          const timeDifference = now.getTime() - createdDate.getTime();
+          const hoursDifference = timeDifference / (1000 * 3600);
+          return hoursDifference <= 24;
+        } catch {
+          return false;
+        }
+      };
+
+      const aIsNew = isRecentlyAdded(a);
+      const bIsNew = isRecentlyAdded(b);
+      if (aIsNew && !bIsNew) return -1;
+      if (!aIsNew && bIsNew) return 1;
       if (a.createdAt && b.createdAt) {
-        return b.createdAt.toDate() - a.createdAt.toDate();
+        return a.createdAt.toDate() - b.createdAt.toDate();
       }
       return 0;
     });

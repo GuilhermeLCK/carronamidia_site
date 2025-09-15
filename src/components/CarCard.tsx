@@ -101,11 +101,35 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
     return firstImage.url || firstImage.base64 || "/placeholder.svg";
   };
 
-  // Removed preloadImage as OptimizedImage now handles lazy loading
-
   return (
-    <Card className="group relative overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col xs:flex-row md:flex-col xs:h-28 md:h-[500px]">
-      <div className="relative xs:h-28 md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full">
+    <Card
+      className={`group relative overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col xs:flex-row md:flex-col ${(() => {
+        const tags = [
+          car.isShielding && "Blindado",
+          car.isZeroKm && "Zero",
+          car.isConsignment && "Repasse",
+          car.inPreparation && "Em Preparação",
+          car.isSemiNovo && "Semi Novo",
+        ].filter(Boolean);
+        if (tags.length >= 3) return "xs:h-36";
+        if (tags.length === 1) return "xs:h-24";
+        return "xs:h-32";
+      })()} md:h-[500px]`}
+    >
+      <div
+        className={`relative ${(() => {
+          const tags = [
+            car.isShielding && "Blindado",
+            car.isZeroKm && "Zero",
+            car.isConsignment && "Repasse",
+            car.inPreparation && "Em Preparação",
+            car.isSemiNovo && "Semi Novo",
+          ].filter(Boolean);
+          if (tags.length >= 3) return "xs:h-36";
+          if (tags.length === 1) return "xs:h-24";
+          return "xs:h-32";
+        })()} md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full`}
+      >
         <OptimizedImage
           src={getFirstImageUrl()}
           alt={car.title}
@@ -113,12 +137,15 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
         />
 
         {isRecentlyAdded() && (
-          <div className="absolute top-1 right-1 xs:top-1 xs:right-1 z-10">
+          <div className="absolute top-1 right-1 xs:top-1 xs:right-1 z-10 ">
             <Badge
-              className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-lg border-0 font-semibold text-xs px-1 py-0.5 animate-pulse"
-              style={{ animationDuration: "2s" }}
+              className="bg-green-500 text-white border border-green-400 font-semibold text-xs px-2 py-1 animate-pulse shadow-lg font-mono"
+              style={{
+                animationDuration: "4s",
+                fontFamily: "'Inter', 'Roboto', sans-serif",
+              }}
             >
-              ✨ Novo
+              ✨Novidade
             </Badge>
           </div>
         )}
@@ -137,27 +164,141 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 mb-2 xs:mb-1 md:mb-3 min-h-4">
-            {car.isShielding && (
-              <Badge className="bg-gradient-to-r from-purple-500 to-purple-600 text-white text-xs px-1 py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow">
-                🛡️ Blindado
-              </Badge>
-            )}
-            {car.isZeroKm && (
-              <Badge className="bg-gradient-to-r from-green-500 to-green-600 text-white text-xs px-1 py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow">
-                ✨ Zero
-              </Badge>
-            )}
-            {car.isConsignment && (
-              <Badge className="bg-gradient-to-r from-orange-500 to-orange-600 text-white text-xs px-1 py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow">
-                🔄 Repasse
-              </Badge>
-            )}
-          </div>
+          {(() => {
+            const tags = [
+              car.isShielding && "Blindado",
+              car.isZeroKm && "Zero",
+              car.isConsignment && "Repasse",
+              car.inPreparation && "Em Preparação",
+              car.isSemiNovo && "Semi Novo",
+            ].filter(Boolean);
 
-          <div className="text-lg xs:text-xs md:text-xl font-bold text-primary mb-1 xs:mb-0.5">
-            {formatCurrency(car.price || "")}
-          </div>
+            const hasOnlyOneTag = tags.length === 1;
+            const hasThreeOrMoreTags = tags.length >= 3;
+
+            return (
+              <>
+                {hasOnlyOneTag ? (
+                  <div className="xs:flex xs:items-center xs:gap-2 md:block mb-2 xs:mb-1 md:mb-3">
+                    <div className="text-lg xs:text-lg  md:text-lg font-bold text-primary md:mb-2">
+                      {formatCurrency(car.price || "")}
+                    </div>
+                    <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 min-h-4">
+                      {car.isShielding && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Blindado
+                        </Badge>
+                      )}
+                      {car.isZeroKm && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Zero
+                        </Badge>
+                      )}
+                      {car.isConsignment && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Repasse
+                        </Badge>
+                      )}
+                      {car.inPreparation && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Em Preparação
+                        </Badge>
+                      )}
+                      {car.isSemiNovo && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs px-2 py-1 font-normal shadow-sm border-0 hover:shadow-md transition-shadow"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Semi Novo
+                        </Badge>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex flex-wrap gap-0.5 xs:gap-0.5 md:gap-1 mb-2 xs:mb-1 md:mb-3 min-h-4 max-w-full">
+                      {car.isSemiNovo && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Semi Novo
+                        </Badge>
+                      )}
+
+                      {car.isShielding && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Blindado
+                        </Badge>
+                      )}
+                      {car.isZeroKm && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Zero
+                        </Badge>
+                      )}
+                      {car.isConsignment && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Repasse
+                        </Badge>
+                      )}
+                      {car.inPreparation && (
+                        <Badge
+                          className="bg-gray-300 text-gray-800 text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-normal shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          style={{
+                            fontFamily: "'Inter', 'Roboto', sans-serif",
+                          }}
+                        >
+                          Em Preparação
+                        </Badge>
+                      )}
+                    </div>
+                    <div className="text-lg xs:text-lg md:text-lg font-bold text-primary mb-1 xs:mb-0.5">
+                      {formatCurrency(car.price || "")}
+                    </div>
+                  </>
+                )}
+              </>
+            );
+          })()}
 
           <Button
             className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-1 md:px-6 py-0.5 md:py-2 w-full xs:w-full md:w-auto mt-auto"

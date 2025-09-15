@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -40,6 +40,7 @@ export interface CarFilters {
 const CarFilters = ({ onFilterChange }: FilterProps) => {
   const [isSticky, setIsSticky] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const filtersRef = useRef<HTMLDivElement>(null);
   const [filters, setFilters] = useState<CarFilters>({
     model: "",
     priceMin: "",
@@ -75,8 +76,11 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+   }, [isExpanded]);
 
   const handleFilterChange = (
     key: keyof CarFilters,
@@ -143,6 +147,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
   return (
     <div
       id="filters"
+      ref={filtersRef}
       className={`${
         isSticky ? "filter-sticky" : ""
       } py-4 px-4 bg-gradient-card border-b border-border/50`}
@@ -175,11 +180,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
           <h3 className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-4 xs:mb-2 md:mb-5 text-center">
             Filtros Rápidos
           </h3>
-          <div
-            className={`max-w-4xl mx-auto ${
-              isSticky ? "xs:hidden md:block" : ""
-            }`}
-          >
+          <div className="max-w-4xl mx-auto">
             {/* Layout mobile: Estoque Completo em cima, outros 3 embaixo */}
             {/* Layout desktop: todos os 4 lado a lado */}
             <div className="flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4">
@@ -435,7 +436,14 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
               />
             </div>
 
-            <div className="flex justify-end mt-6 xs:mt-3 md:mt-8">
+            <div className="flex justify-between mt-6 xs:mt-3 md:mt-8">
+              <Button
+                variant="outline"
+                onClick={() => setIsExpanded(false)}
+                className="border-border/50 hover:bg-muted/50 hover:border-muted-foreground/50 transition-all h-10 xs:h-7 md:h-12 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg"
+              >
+                Fechar
+              </Button>
               <Button
                 variant="outline"
                 onClick={clearFilters}
