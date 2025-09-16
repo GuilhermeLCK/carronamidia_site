@@ -101,6 +101,14 @@
   html {
     scroll-behavior: smooth;
   }
+
+  .sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
 }
 
 @layer components {
@@ -110,8 +118,10 @@
 
   .filter-sticky {
     @apply sticky top-0 z-50 bg-background/95 border-b border-border;
-    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    will-change: background-color;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, background-color;
+    transform: translateZ(0);
+    /* Force hardware acceleration */
   }
 
   @media (min-width: 768px) {

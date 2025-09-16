@@ -1,9 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeroSection from "@/components/HeroSection";
 import CarFilters, {
   CarFilters as CarFiltersType,
 } from "@/components/CarFilters";
 import CarGrid from "@/components/CarGrid";
+import Footer from "@/components/Footer";
+import FloatingButtons from "@/components/FloatingButtons";
 import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
@@ -26,7 +28,14 @@ const Index = () => {
     showFavorites: false,
   });
 
-  const [localFavorites, setLocalFavorites] = useState<Set<string>>(new Set());
+  const [localFavorites, setLocalFavorites] = useState<Set<string>>(() => {
+    const saved = localStorage.getItem('carFavorites');
+    return saved ? new Set(JSON.parse(saved)) : new Set();
+  });
+
+  useEffect(() => {
+    localStorage.setItem('carFavorites', JSON.stringify(Array.from(localFavorites)));
+  }, [localFavorites]);
 
   const toggleLocalFavorite = (carId: string) => {
     setLocalFavorites((prev) => {
@@ -83,6 +92,8 @@ const Index = () => {
           localFavorites,
         }}
       />
+      <Footer />
+      <FloatingButtons />
     </div>
   );
 };

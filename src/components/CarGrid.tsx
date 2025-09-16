@@ -64,9 +64,8 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
         .split(/\s+/)
         .filter((term) => term.length > 0);
       filtered = filtered.filter((car) => {
-        const carText = `${car.model || ""} ${car.brand || ""} ${
-          car.description || ""
-        } ${car.title || ""}`.toLowerCase();
+        const carText = `${car.model || ""} ${car.brand || ""} ${car.description || ""
+          } ${car.title || ""}`.toLowerCase();
         return searchTerms.every((term) => carText.includes(term));
       });
     }
@@ -125,18 +124,29 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
 
       const aIsNew = isRecentlyAdded(a);
       const bIsNew = isRecentlyAdded(b);
+
       if (aIsNew && !bIsNew) return -1;
       if (!aIsNew && bIsNew) return 1;
-      if (a.createdAt && b.createdAt) {
-        return a.createdAt.toDate() - b.createdAt.toDate();
+
+      if (aIsNew && bIsNew && a.createdAt && b.createdAt) {
+        const aDate = a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+        const bDate = b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        return bDate.getTime() - aDate.getTime();
       }
+
+      if (a.createdAt && b.createdAt) {
+        const aDate = a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
+        const bDate = b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        return bDate.getTime() - aDate.getTime();
+      }
+
       return 0;
     });
   }, [cars, filters]);
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-12">
         <div className="flex items-center gap-3 mb-8">
           <CarIcon className="h-6 w-6 xs:h-5 xs:w-5 text-primary" />
           <div className="h-6 bg-gray-300 rounded w-48 animate-pulse"></div>
@@ -146,8 +156,8 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
           <div className="h-8 bg-gray-300 rounded w-64 animate-pulse mb-4"></div>
         </div>
 
-        <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {Array.from({ length: 6 }).map((_, index) => (
+        <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2">
+          {Array.from({ length: 10 }).map((_, index) => (
             <CarCardSkeleton key={index} />
           ))}
         </div>
@@ -157,7 +167,7 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
 
   if (error && cars.length === 0) {
     return (
-      <div className="max-w-7xl mx-auto px-4 py-12">
+      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-12">
         <div className="text-center py-16">
           <AlertCircle className="h-16 w-16 text-destructive mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -176,7 +186,7 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-12">
       {error && cars.length > 0 && (
         <Alert className="mb-6 border-orange-200 bg-orange-50">
           <AlertCircle className="h-4 w-4 text-orange-600" />
@@ -273,7 +283,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
 
     setIsLoadingMore(true);
 
-    
+
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     const nextPage = page + 1;
@@ -288,30 +298,30 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
   return (
     <div>
       <div
-        className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1"
         ref={containerRef}
       >
         {visibleCars.map((car, index) => (
-          <CarCard 
-            key={`${car.id}-${index}`} 
-            car={car} 
+          <CarCard
+            key={`${car.id}-${index}`}
+            car={car}
             favoritesManager={favoritesManager}
           />
         ))}
       </div>
 
-      
+
       {isLoadingMore && (
         <div className="flex justify-center mt-8">
-          <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
-            {Array.from({ length: 3 }).map((_, index) => (
+          <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 w-full">
+            {Array.from({ length: 5 }).map((_, index) => (
               <CarCardSkeleton key={`loading-${index}`} />
             ))}
           </div>
         </div>
       )}
 
-      
+
       {page < totalPages && (
         <div
           ref={loadMoreRef}

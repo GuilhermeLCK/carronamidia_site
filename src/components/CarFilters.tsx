@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   Search,
@@ -16,6 +17,7 @@ import {
   ChevronDown,
   ChevronUp,
   Heart,
+  X,
 } from "lucide-react";
 
 interface FilterProps {
@@ -47,9 +49,13 @@ export interface CarFilters {
 }
 
 const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
-  const [isSticky, setIsSticky] = useState(false);
+
   const [isExpanded, setIsExpanded] = useState(false);
+  const [startY, setStartY] = useState(0);
+  const [currentY, setCurrentY] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const filtersRef = useRef<HTMLDivElement>(null);
+  const expandedContentRef = useRef<HTMLDivElement>(null);
   const localFavorites = onFavoritesChange?.localFavorites || new Set<string>();
   const [filters, setFilters] = useState<CarFilters>({
     model: "",
@@ -69,29 +75,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     showFavorites: false,
   });
 
-  useEffect(() => {
-    let ticking = false;
 
-    const handleScroll = () => {
-      if (!ticking) {
-        requestAnimationFrame(() => {
-          const filtersElement = document.getElementById("filters");
-          if (filtersElement) {
-            const rect = filtersElement.getBoundingClientRect();
-            setIsSticky(rect.top <= 0);
-          }
-          ticking = false;
-        });
-        ticking = true;
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [isExpanded]);
 
   const handleFilterChange = (
     key: keyof CarFilters,
@@ -166,6 +150,82 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     onFilterChange(emptyFilters);
   };
 
+  const hasActiveFilters = () => {
+    return (
+      filters.year !== "" ||
+      filters.fuelType !== "" ||
+      filters.transmission !== "" ||
+      filters.category !== "" ||
+      filters.isShielding === true ||
+      filters.priceRange[0] > 0 ||
+      filters.priceRange[1] < 1000000 ||
+      filters.searchTerm !== ""
+    );
+  };
+
+  const handleTouchStart = useCallback((e: React.TouchEvent) => {
+    if (!isExpanded) return;
+    setStartY(e.touches[0].clientY);
+    setIsDragging(true);
+  }, [isExpanded]);
+
+  const handleTouchMove = useCallback((e: React.TouchEvent) => {
+    if (!isDragging || !isExpanded) return;
+    const currentY = e.touches[0].clientY;
+    setCurrentY(currentY);
+    
+    const deltaY = startY - currentY;
+    if (deltaY > 0) {
+      const progress = Math.min(deltaY / 100, 1);
+      if (expandedContentRef.current) {
+        expandedContentRef.current.style.transform = `translateY(-${progress * 20}px)`;
+        expandedContentRef.current.style.opacity = `${1 - progress * 0.3}`;
+      }
+    }
+  }, [isDragging, isExpanded, startY]);
+
+  const handleTouchEnd = useCallback(() => {
+    if (!isDragging || !isExpanded) return;
+    
+    const deltaY = startY - currentY;
+    if (deltaY > 50) {
+      setIsExpanded(false);
+    }
+    
+    if (expandedContentRef.current) {
+      expandedContentRef.current.style.transform = '';
+      expandedContentRef.current.style.opacity = '';
+    }
+    
+    setIsDragging(false);
+    setStartY(0);
+    setCurrentY(0);
+  }, [isDragging, isExpanded, startY, currentY]);
+
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    
+    const handleScroll = () => {
+      if (isExpanded) {
+        clearTimeout(timeoutId);
+        timeoutId = setTimeout(() => {
+          setIsExpanded(false);
+        }, 100);
+      }
+    };
+
+    if (isExpanded) {
+      timeoutId = setTimeout(() => {
+        window.addEventListener('scroll', handleScroll, { passive: true });
+      }, 500);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isExpanded]);
+
   const years = Array.from({ length: 15 }, (_, i) =>
     (new Date().getFullYear() - i).toString()
   );
@@ -174,9 +234,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     <div
       id="filters"
       ref={filtersRef}
-      className={`${
-        isSticky ? "filter-sticky" : ""
-      } py-4 px-4 bg-gradient-card border-b border-border/50`}
+      className="sticky top-0 z-50 py-4 px-4 bg-background border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-4">
@@ -187,19 +245,31 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
             </h2>
           </div>
 
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="flex items-center gap-1 xs:gap-0.5 text-sm xs:text-xs md:text-base px-3 xs:px-1 md:px-4 h-9 xs:h-7 md:h-10"
-          >
-            {isExpanded ? "Ocultar" : "Mostrar"} Filtros
-            {isExpanded ? (
-              <ChevronUp className="h-4 w-4 xs:h-2.5 xs:w-2.5 md:h-5 md:w-5" />
-            ) : (
-              <ChevronDown className="h-4 w-4 xs:h-2.5 xs:w-2.5 md:h-5 md:w-5" />
+          <div className="flex items-center gap-2">
+            {!isExpanded && hasActiveFilters() && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={clearFilters}
+                className="text-xs xs:text-[10px] md:text-sm px-2 xs:px-1 md:px-3 h-8 xs:h-6 md:h-9 border-destructive/50 text-destructive hover:bg-destructive/10"
+              >
+                Limpar Filtros
+              </Button>
             )}
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-1 xs:gap-0.5 text-sm xs:text-xs md:text-base px-3 xs:px-1 md:px-4 h-9 xs:h-7 md:h-10"
+            >
+              {isExpanded ? "Ocultar" : "Mostrar"} Filtros
+              {isExpanded ? (
+                <ChevronUp className="h-4 w-4 xs:h-2.5 xs:w-2.5 md:h-5 md:w-5" />
+              ) : (
+                <ChevronDown className="h-4 w-4 xs:h-2.5 xs:w-2.5 md:h-5 md:w-5" />
+              )}
+            </Button>
+          </div>
         </div>
 
         <div className="mb-6 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
@@ -269,9 +339,18 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </div>
         </div>
 
-        {isExpanded && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xs:gap-2 md:gap-5">
+        <div
+          className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'
+            }`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          <div
+            ref={expandedContentRef}
+            className="transform transition-all duration-300 ease-out"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xs:gap-2 md:gap-5 mb-6">
               <Select
                 value={filters.year}
                 onValueChange={(value) => handleFilterChange("year", value)}
@@ -307,22 +386,34 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                     Diesel
                   </SelectItem>
                   <SelectItem
-                    value="Híbrido"
-                    className="text-base xs:text-xs md:text-lg"
-                  >
-                    Híbrido
-                  </SelectItem>
-                  <SelectItem
                     value="Flex"
                     className="text-base xs:text-xs md:text-lg"
                   >
                     Flex
                   </SelectItem>
                   <SelectItem
-                    value="Sistema Híbrido Plugin"
+                    value="Gasolina"
                     className="text-base xs:text-xs md:text-lg"
                   >
-                    Sistema Híbrido Plugin
+                    Gasolina
+                  </SelectItem>
+                  <SelectItem
+                    value="Híbrido"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Híbrido
+                  </SelectItem>
+                  <SelectItem
+                    value="Híbrido Plug-in"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Híbrido Plug-in
+                  </SelectItem>
+                  <SelectItem
+                    value="Elétrico"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Elétrico
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -391,6 +482,24 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                     Picape Intermediaria
                   </SelectItem>
                   <SelectItem
+                    value="Sedan Popular"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Sedan Popular
+                  </SelectItem>
+                  <SelectItem
+                    value="Hatch Popular"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Hatch Popular
+                  </SelectItem>
+                  <SelectItem
+                    value="Hatch Premium"
+                    className="text-base xs:text-xs md:text-lg"
+                  >
+                    Hatch Premium
+                  </SelectItem>
+                  <SelectItem
                     value="Utilitarios"
                     className="text-base xs:text-xs md:text-lg"
                   >
@@ -405,45 +514,28 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                 </SelectContent>
               </Select>
 
-              <Select
-                value={
-                  filters.isShielding === undefined
-                    ? ""
-                    : filters.isShielding
-                    ? "true"
-                    : "false"
-                }
-                onValueChange={(value) => {
-                  if (value === "") {
-                    handleFilterChange("isShielding", undefined);
-                  } else {
-                    handleFilterChange("isShielding", value === "true");
-                  }
-                }}
-              >
-                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-lg">
-                  <SelectValue placeholder="Blindagem" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem
-                    value="true"
-                    className="text-base xs:text-xs md:text-lg"
-                  >
-                    Com Blindagem
-                  </SelectItem>
-                  <SelectItem
-                    value="false"
-                    className="text-base xs:text-xs md:text-lg"
-                  >
-                    Sem Blindagem
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="flex items-center space-x-3 p-3 bg-input/50 border border-border/50 rounded-lg h-11 xs:h-8 md:h-12">
+                <Checkbox
+                  id="blindagem"
+                  checked={filters.isShielding === true}
+                  onCheckedChange={(checked) => {
+                    handleFilterChange("isShielding", checked ? true : undefined);
+                  }}
+                  className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                />
+                <label
+                  htmlFor="blindagem"
+                  className="text-base xs:text-xs md:text-lg font-medium cursor-pointer flex-1"
+                >
+                  Apenas Blindados
+                </label>
+              </div>
             </div>
 
             <div className="mt-6 xs:mt-3 md:mt-8">
               <label className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-3 xs:mb-1 md:mb-4 block">
-                Faixa de Preço: R$ {filters.priceRange[0].toLocaleString()} - R${" "}
+                Faixa de Preço: R$ {filters.priceRange[0].toLocaleString()} - R${
+                  " "}
                 {filters.priceRange[1].toLocaleString()}
               </label>
               <Slider
@@ -459,24 +551,30 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
               />
             </div>
 
-            <div className="flex justify-between mt-6 xs:mt-3 md:mt-8">
-              <Button
-                variant="outline"
-                onClick={() => setIsExpanded(false)}
-                className="border-border/50 hover:bg-muted/50 hover:border-muted-foreground/50 transition-all h-10 xs:h-7 md:h-12 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg"
-              >
-                Fechar
-              </Button>
+            {/* Lingueta de fechamento */}
+            <div className="flex flex-col items-center mt-6 xs:mt-3 md:mt-8">
               <Button
                 variant="outline"
                 onClick={clearFilters}
-                className="border-border/50 hover:bg-destructive/10 hover:border-destructive/50 transition-all h-10 xs:h-7 md:h-12 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg"
+                className="mb-4 border-border/50 hover:bg-destructive/10 hover:border-destructive/50 transition-all h-10 xs:h-7 md:h-12 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg"
               >
                 Limpar Filtros
               </Button>
+
+              {/* Lingueta retrátil */}
+              <button
+                onClick={() => setIsExpanded(false)}
+                className="group flex flex-col items-center gap-1 py-2 px-4 rounded-t-lg bg-muted/30 hover:bg-muted/50 transition-all duration-300 border-t border-l border-r border-border/30"
+              >
+                <div className="w-8 h-1 bg-muted-foreground/40 rounded-full group-hover:bg-muted-foreground/60 transition-colors"></div>
+                <ChevronUp className="h-4 w-4 text-muted-foreground/60 group-hover:text-muted-foreground transition-colors" />
+                <span className="text-xs text-muted-foreground/60 group-hover:text-muted-foreground transition-colors hidden md:block">
+                  Fechar
+                </span>
+              </button>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
