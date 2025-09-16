@@ -100,58 +100,47 @@ const HeroSection = () => {
 
         <div className="mt-6 xs:mt-4 md:mt-12">
           <div className="bg-gradient-to-r from-background/80 to-muted/20 backdrop-blur-sm rounded-xl xs:rounded-lg p-6 xs:p-4 border border-border/50">
-            <h3 className="text-xl xs:text-lg font-semibold text-center mb-6 xs:mb-4">
+            <h3 className="text-xl xs:text-sm font-semibold text-center mb-6 xs:mb-3">
               Entre em Contato
             </h3>
 
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 xs:gap-2">
-              <div className="flex flex-col xs:flex-col items-center justify-center gap-2 xs:gap-1 p-3 xs:p-2 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <Instagram className="h-5 w-5 xs:h-4 xs:w-4 text-pink-600" />
+            <div className="flex justify-center gap-3 xs:gap-1 flex-wrap">
+              <div className="flex items-center gap-1 xs:gap-0.5 p-2 xs:p-1 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
+                <Instagram className="h-4 w-4 xs:h-3 xs:w-3 text-pink-600" />
                 <a
                   href="https://instagram.com/parisdakarrepasse"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs xs:text-[10px] font-medium hover:text-primary transition-colors text-center leading-tight"
+                  className="text-xs xs:text-[9px] font-medium hover:text-primary transition-colors"
                 >
-                  @parisdakarrepasse
+                  @parisdakar
                 </a>
               </div>
 
-              <div className="flex flex-col xs:flex-col items-center justify-center gap-2 xs:gap-1 p-3 xs:p-2 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <Instagram className="h-5 w-5 xs:h-4 xs:w-4 text-pink-600" />
+              {/* Instagram Carro na Mídia */}
+              <div className="flex items-center gap-1 xs:gap-0.5 p-2 xs:p-1 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
+                <Instagram className="h-4 w-4 xs:h-3 xs:w-3 text-pink-600" />
                 <a
                   href="https://instagram.com/carronamidia"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs xs:text-[10px] font-medium hover:text-primary transition-colors text-center leading-tight"
+                  className="text-xs xs:text-[9px] font-medium hover:text-primary transition-colors"
                 >
                   @carronamidia
                 </a>
               </div>
 
-              <div className="flex flex-col xs:flex-col items-center justify-center gap-2 xs:gap-1 p-3 xs:p-2 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <MessageCircle className="h-5 w-5 xs:h-4 xs:w-4 text-green-600" />
+              {/* WhatsApp */}
+              <div className="flex items-center gap-1 xs:gap-0.5 p-2 xs:p-1 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
+                <MessageCircle className="h-4 w-4 xs:h-3 xs:w-3 text-green-600" />
                 <a
                   href="https://wa.me/5585985114497?text=Olá%20Felipe!%20Vim%20através%20do%20site%20e%20gostaria%20de%20informações%20sobre%20os%20veículos."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs xs:text-[10px] font-medium hover:text-primary transition-colors text-center leading-tight"
+                  className="text-xs xs:text-[9px] font-medium hover:text-primary transition-colors"
                 >
-                  (85) 98511-4497<br />
-                  <span className="text-[10px] xs:text-[9px] text-muted-foreground">Felipe Lima</span>
+                  Felipe Lima
                 </a>
-              </div>
-
-              <div className="flex flex-col xs:flex-col items-center justify-center gap-2 xs:gap-1 p-3 xs:p-2 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <MapPin className="h-5 w-5 xs:h-4 xs:w-4 text-blue-600" />
-                <div className="text-center">
-                  <div className="text-xs xs:text-[10px] font-medium leading-tight">
-                    Av. Rogaciano Leite, 1990
-                  </div>
-                  <div className="text-[10px] xs:text-[9px] text-muted-foreground leading-tight">
-                    Salinas - Fortaleza, Ceará
-                  </div>
-                </div>
               </div>
             </div>
           </div>

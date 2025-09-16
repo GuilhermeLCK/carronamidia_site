@@ -51,6 +51,8 @@ export interface CarFilters {
 const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isStockOptionsExpanded, setIsStockOptionsExpanded] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -167,7 +169,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     if (!isExpanded) return;
 
     const target = e.target as HTMLElement;
-    if (target.closest('button, select, input, label, [role="combobox"], [data-radix-collection-item], [data-state]')) {
+    if (target.closest('button, select, input, label, [role="combobox"], [role="option"], [data-radix-collection-item], [data-state], [data-radix-select-trigger], [data-radix-select-content], [data-radix-select-item], [data-radix-select-viewport], .radix-select, .select-trigger, .select-content')) {
       return;
     }
 
@@ -208,6 +210,16 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     setCurrentY(0);
   }, [isDragging, isExpanded, startY, currentY]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      setIsScrolled(scrollY > 100);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
 
 
   const years = Array.from({ length: 15 }, (_, i) =>
@@ -244,19 +256,19 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
               variant="ghost"
               size="sm"
               onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-1 xs:gap-0.5 text-sm xs:text-xs md:text-base px-3 xs:px-1 md:px-4 h-9 xs:h-7 md:h-10"
+              className="flex items-center gap-1 px-3 py-1 h-8 xs:h-6 md:h-9 hover:bg-muted/50 transition-all duration-200 rounded-lg"
             >
-              {isExpanded ? "Ocultar" : "Mostrar"} Filtros
+              <span className="text-xs xs:text-[10px] md:text-sm">Filtros Avançados</span>
               {isExpanded ? (
-                <ChevronUp className="h-4 w-4 xs:h-2.5 xs:w-2.5 md:h-5 md:w-5" />
+                <ChevronUp className="h-3 w-3 xs:h-2 xs:w-2 md:h-4 md:w-4" />
               ) : (
-                <ChevronDown className="h-4 w-4 xs:h-2.5 xs:w-2.5 md:h-5 md:w-5" />
+                <ChevronDown className="h-3 w-3 xs:h-2 xs:w-2 md:h-4 md:w-4" />
               )}
             </Button>
           </div>
         </div>
 
-        <div className="mb-6 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
+        <div className="mb-3 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
           <div className="relative">
             <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
             <Input
@@ -268,58 +280,186 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </div>
         </div>
 
-        <div className="mb-6">
+        <div className="mb-1">
           <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4">
-              <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
-                <Button
-                  variant={filters.showAll ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleTagFilter("showAll")}
-                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-                >
-                  Estoque Completo
-                </Button>
+            <div className={`transition-all duration-300 ease-in-out ${isScrolled ? 'md:max-h-96 md:opacity-100 max-h-0 opacity-0 overflow-hidden' : 'max-h-96 opacity-100'
+              }`}>
+              <div className="hidden md:flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4 mb-2">
+                <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
+                  <Button
+                    variant={filters.showAll ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleTagFilter("showAll")}
+                    className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    Estoque Completo
+                  </Button>
 
-                <Button
-                  variant={filters.showFavorites ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleFavoritesFilter()}
-                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
-                >
-                  Favoritos ({localFavorites.size})
-                </Button>
+                  <Button
+                    variant={filters.showFavorites ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleFavoritesFilter()}
+                    className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+                  >
+                    Favoritos ({localFavorites.size})
+                  </Button>
+                </div>
+
+                <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
+                  <Button
+                    variant={filters.isSemiNew ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleTagFilter("isSemiNew")}
+                    className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    Semi Novo
+                  </Button>
+
+                  <Button
+                    variant={filters.isZeroKm ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleTagFilter("isZeroKm")}
+                    className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    Zero KM
+                  </Button>
+
+                  <Button
+                    variant={filters.isConsignment ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => handleTagFilter("isConsignment")}
+                    className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  >
+                    Repasse
+                  </Button>
+                </div>
               </div>
 
-              <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
-                <Button
-                  variant={filters.isSemiNew ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleTagFilter("isSemiNew")}
-                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-                >
-                  Semi Novo
-                </Button>
+              <div className="md:hidden mb-2">
+                <div className="space-y-1">
+                  <div className="grid grid-cols-2 gap-2">
+                    <Button
+                      variant={filters.showAll ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleTagFilter("showAll")}
+                      className="h-8 px-3 text-xs font-medium rounded-lg transition-all duration-200"
+                    >
+                      Estoque Completo
+                    </Button>
 
-                <Button
-                  variant={filters.isZeroKm ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleTagFilter("isZeroKm")}
-                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-                >
-                  Zero KM
-                </Button>
+                    <Button
+                      variant={filters.showFavorites ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleFavoritesFilter()}
+                      className="h-8 px-3 text-xs font-medium rounded-lg transition-all duration-200"
+                    >
+                      Favoritos ({localFavorites.size})
+                    </Button>
+                  </div>
 
-                <Button
-                  variant={filters.isConsignment ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => handleTagFilter("isConsignment")}
-                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
-                >
-                  Repasse
-                </Button>
+                  <div className="grid grid-cols-3 gap-2">
+                    <Button
+                      variant={filters.isSemiNew ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleTagFilter("isSemiNew")}
+                      className="h-8 px-2 text-xs font-medium rounded-lg transition-all duration-200"
+                    >
+                      Semi Novo
+                    </Button>
+
+                    <Button
+                      variant={filters.isZeroKm ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleTagFilter("isZeroKm")}
+                      className="h-8 px-2 text-xs font-medium rounded-lg transition-all duration-200"
+                    >
+                      Zero KM
+                    </Button>
+
+                    <Button
+                      variant={filters.isConsignment ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleTagFilter("isConsignment")}
+                      className="h-8 px-2 text-xs font-medium rounded-lg transition-all duration-200"
+                    >
+                      Repasse
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
+
+            {isScrolled && (
+              <div className="mb-2 md:hidden">
+                <div
+                  onClick={() => setIsStockOptionsExpanded(!isStockOptionsExpanded)}
+                  className="flex items-center justify-end gap-1 py-2 cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
+                >
+                  <span className="underline decoration-1 underline-offset-2">Opções de Estoque</span>
+                  {isStockOptionsExpanded ? (
+                    <ChevronUp className="h-2 w-2" />
+                  ) : (
+                    <ChevronDown className="h-2 w-2" />
+                  )}
+                </div>
+
+                <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isStockOptionsExpanded ? 'max-h-96 opacity-100 mt-2' : 'max-h-0 opacity-0'
+                  }`}>
+                  <div className="space-y-2">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button
+                        variant={filters.showAll ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleTagFilter("showAll")}
+                        className="h-8 px-3 text-xs font-medium rounded-lg transition-all duration-200"
+                      >
+                        Estoque Completo
+                      </Button>
+
+                      <Button
+                        variant={filters.showFavorites ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleFavoritesFilter()}
+                        className="h-8 px-3 text-xs font-medium rounded-lg transition-all duration-200"
+                      >
+                        Favoritos ({localFavorites.size})
+                      </Button>
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <Button
+                        variant={filters.isSemiNew ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleTagFilter("isSemiNew")}
+                        className="h-8 px-2 text-xs font-medium rounded-lg transition-all duration-200"
+                      >
+                        Semi Novo
+                      </Button>
+
+                      <Button
+                        variant={filters.isZeroKm ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleTagFilter("isZeroKm")}
+                        className="h-8 px-2 text-xs font-medium rounded-lg transition-all duration-200"
+                      >
+                        Zero KM
+                      </Button>
+
+                      <Button
+                        variant={filters.isConsignment ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleTagFilter("isConsignment")}
+                        className="h-8 px-2 text-xs font-medium rounded-lg transition-all duration-200"
+                      >
+                        Repasse
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+
           </div>
         </div>
 
@@ -535,27 +675,24 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
               />
             </div>
 
-            {/* Lingueta de fechamento */}
-            <div className="flex flex-col items-center mt-6 xs:mt-3 md:mt-8">
-              <Button
-                variant="outline"
-                onClick={clearFilters}
-                className="mb-4 border-border/50 hover:bg-destructive/10 hover:border-destructive/50 transition-all h-10 xs:h-7 md:h-12 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg"
-              >
-                Limpar Filtros
-              </Button>
-
-              {/* Lingueta retrátil */}
+            <div className="relative flex justify-center mt-6 xs:mt-3 md:mt-8">
               <button
                 onClick={() => setIsExpanded(false)}
                 className="group flex flex-col items-center gap-1 py-2 px-4 rounded-t-lg bg-muted/30 hover:bg-muted/50 transition-all duration-300 border-t border-l border-r border-border/30"
               >
                 <div className="w-8 h-1 bg-muted-foreground/40 rounded-full group-hover:bg-muted-foreground/60 transition-colors"></div>
                 <ChevronUp className="h-4 w-4 text-muted-foreground/60 group-hover:text-muted-foreground transition-colors" />
-                <span className="text-xs text-muted-foreground/60 group-hover:text-muted-foreground transition-colors hidden md:block">
+                <span className="text-xs text-muted-foreground/60 group-hover:text-muted-foreground transition-colors">
                   Fechar
                 </span>
               </button>
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 border-border/50 hover:bg-destructive/10 hover:border-destructive/50 transition-all h-10 xs:h-7 md:h-12 px-6 xs:px-2 md:px-8 text-base xs:text-xs md:text-lg"
+              >
+                Limpar Filtros
+              </Button>
             </div>
           </div>
         </div>
