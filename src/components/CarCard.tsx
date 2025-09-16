@@ -139,13 +139,13 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
         {isRecentlyAdded() && (
           <div className="absolute top-1 right-1 xs:top-1 xs:right-1 z-10 ">
             <Badge
-              className="bg-gradient-to-r from-purple-500 to-orange-500 text-white border border-purple-400 font-semibold text-xs px-2 py-1 shadow-lg font-mono"
+              className="bg-gradient-to-r from-purple-600 to-orange-600 text-white border border-purple-500 font-semibold text-xs px-2 py-1 shadow-lg font-mono"
               style={{
                 // animationDuration: "4s",
                 fontFamily: "'Inter', 'Roboto', sans-serif",
               }}
             >
-              ✨Novidade
+              Novidade
             </Badge>
           </div>
         )}
@@ -180,7 +180,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
               <>
                 {hasOnlyOneTag ? (
                   <div className="xs:flex xs:items-center xs:gap-2 md:block mb-2 xs:mb-1 md:mb-3">
-                    <div className="text-sm xs:text-sm md:text-sm font-bold text-red-600 md:mb-2">
+                    <div className="text-sm xs:text-base md:text-sm font-bold text-red-600 md:mb-2">
                       {formatCurrency(car.price || "")}
                     </div>
                     <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 min-h-4">
@@ -291,7 +291,7 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
                         </Badge>
                       )}
                     </div>
-                    <div className="text-sm xs:text-sm md:text-sm font-bold text-red-600 mb-1 xs:mb-0.5">
+                    <div className="text-sm xs:text-base md:text-sm font-bold text-red-600 mb-1 xs:mb-0.5">
                       {formatCurrency(car.price || "")}
                     </div>
                   </>
