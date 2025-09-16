@@ -15,9 +15,10 @@ interface CarGridProps {
     getLocalFavoritesCars: (cars: any[]) => any[];
     localFavorites: Set<string>;
   };
+  onTotalCarsChange?: (total: number) => void;
 }
 
-const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
+const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps) => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -106,7 +107,7 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
         return false;
       });
     }
-    return filtered.sort((a, b) => {
+    const sorted = filtered.sort((a, b) => {
       const isRecentlyAdded = (car: any): boolean => {
         try {
           if (!car.createdAt) return false;
@@ -142,11 +143,18 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
 
       return 0;
     });
-  }, [cars, filters]);
+    
+    // Notificar o total de carros filtrados
+    if (onTotalCarsChange) {
+      onTotalCarsChange(sorted.length);
+    }
+    
+    return sorted;
+  }, [cars, filters, onTotalCarsChange]);
 
   if (loading) {
     return (
-      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-12">
+      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-3">
         <div className="flex items-center gap-3 mb-8">
           <CarIcon className="h-6 w-6 xs:h-5 xs:w-5 text-primary" />
           <div className="h-6 bg-gray-300 rounded w-48 animate-pulse"></div>
@@ -204,22 +212,9 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
         </Alert>
       )}
 
-      <div className="flex items-center justify-between mb-8">
-        <div className="flex items-center gap-3">
-          <CarIcon className="h-6 w-6 xs:h-5 xs:w-5 text-primary" />
-          <h2 className="text-2xl xs:text-lg md:text-2xl font-semibold">
-            {filteredAndSortedCars.length}{" "}
-            {filteredAndSortedCars.length === 1
-              ? "Veículo Encontrado"
-              : "Veículos Encontrados"}
-          </h2>
-        </div>
-      </div>
+
       {filteredAndSortedCars.length > 0 && (
         <div>
-          <h2 className="text-2xl xs:text-lg md:text-2xl font-bold text-gray-900 mb-6 xs:mb-4">
-            Confira nossos carros
-          </h2>
           <VirtualizedCarGrid cars={filteredAndSortedCars} favoritesManager={favoritesManager} />
         </div>
       )}

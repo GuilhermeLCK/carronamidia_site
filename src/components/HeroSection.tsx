@@ -100,44 +100,44 @@ const HeroSection = () => {
 
         <div className="mt-6 xs:mt-4 md:mt-12">
           <div className="bg-gradient-to-r from-background/80 to-muted/20 backdrop-blur-sm rounded-xl xs:rounded-lg p-6 xs:p-4 border border-border/50">
-            <h3 className="text-xl xs:text-sm font-semibold text-center mb-6 xs:mb-3">
+            <h3 className="text-xl xs:text-sm md:text-2xl font-semibold text-center mb-6 xs:mb-3 md:mb-8">
               Entre em Contato
             </h3>
 
-            <div className="flex justify-center gap-3 xs:gap-1 flex-wrap">
-              <div className="flex items-center gap-1 xs:gap-0.5 p-2 xs:p-1 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <Instagram className="h-4 w-4 xs:h-3 xs:w-3 text-pink-600" />
+            <div className="flex justify-center gap-3 xs:gap-1 md:gap-6 flex-wrap">
+              <div className="flex items-center gap-1 xs:gap-0.5 md:gap-2 p-2 xs:p-1 md:p-4 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
+                <Instagram className="h-4 w-4 xs:h-3 xs:w-3 md:h-6 md:w-6 text-pink-600" />
                 <a
                   href="https://instagram.com/parisdakarrepasse"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs xs:text-[9px] font-medium hover:text-primary transition-colors"
+                  className="text-xs xs:text-[9px] md:text-base font-medium hover:text-primary transition-colors"
                 >
                   @parisdakar
                 </a>
               </div>
 
               {/* Instagram Carro na Mídia */}
-              <div className="flex items-center gap-1 xs:gap-0.5 p-2 xs:p-1 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <Instagram className="h-4 w-4 xs:h-3 xs:w-3 text-pink-600" />
+              <div className="flex items-center gap-1 xs:gap-0.5 md:gap-2 p-2 xs:p-1 md:p-4 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
+                <Instagram className="h-4 w-4 xs:h-3 xs:w-3 md:h-6 md:w-6 text-pink-600" />
                 <a
                   href="https://instagram.com/carronamidia"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs xs:text-[9px] font-medium hover:text-primary transition-colors"
+                  className="text-xs xs:text-[9px] md:text-base font-medium hover:text-primary transition-colors"
                 >
                   @carronamidia
                 </a>
               </div>
 
               {/* WhatsApp */}
-              <div className="flex items-center gap-1 xs:gap-0.5 p-2 xs:p-1 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
-                <MessageCircle className="h-4 w-4 xs:h-3 xs:w-3 text-green-600" />
+              <div className="flex items-center gap-1 xs:gap-0.5 md:gap-2 p-2 xs:p-1 md:p-4 bg-background/50 rounded-lg hover:bg-background/80 transition-colors">
+                <MessageCircle className="h-4 w-4 xs:h-3 xs:w-3 md:h-6 md:w-6 text-green-600" />
                 <a
                   href="https://wa.me/5585985114497?text=Olá%20Felipe!%20Vim%20através%20do%20site%20e%20gostaria%20de%20informações%20sobre%20os%20veículos."
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs xs:text-[9px] font-medium hover:text-primary transition-colors"
+                  className="text-xs xs:text-[9px] md:text-base font-medium hover:text-primary transition-colors"
                 >
                   Felipe Lima
                 </a>

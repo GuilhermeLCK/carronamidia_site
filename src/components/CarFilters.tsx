@@ -18,6 +18,7 @@ import {
   ChevronUp,
   Heart,
   X,
+  Car,
 } from "lucide-react";
 
 interface FilterProps {
@@ -28,6 +29,7 @@ interface FilterProps {
     getLocalFavoritesCars: (cars: any[]) => any[];
     localFavorites: Set<string>;
   };
+  totalCars?: number;
 }
 
 export interface CarFilters {
@@ -48,7 +50,7 @@ export interface CarFilters {
   showFavorites: boolean;
 }
 
-const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
+const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: FilterProps) => {
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [isStockOptionsExpanded, setIsStockOptionsExpanded] = useState(false);
@@ -230,10 +232,10 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     <div
       id="filters"
       ref={filtersRef}
-      className="sticky top-0 z-50 py-4 px-4 bg-background border-b border-border/50"
+      className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-2 md:mb-4">
           <div className="flex items-center gap-2 xs:gap-1">
             <SlidersHorizontal className="h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-primary" />
             <h2 className="text-xl xs:text-base md:text-2xl font-semibold">
@@ -268,7 +270,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </div>
         </div>
 
-        <div className="mb-3 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
+        <div className="mb-2 md:mb-4 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
           <div className="relative">
             <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
             <Input
@@ -280,7 +282,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </div>
         </div>
 
-        <div className="mb-1">
+        <div className="mb-0 md:mb-2">
           <div className="max-w-5xl mx-auto">
             <div className={`transition-all duration-300 ease-in-out ${isScrolled ? 'md:max-h-96 md:opacity-100 max-h-0 opacity-0 overflow-hidden' : 'max-h-96 opacity-100'
               }`}>
@@ -696,6 +698,16 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
             </div>
           </div>
         </div>
+        
+        {/* Contador de veículos no final */}
+         <div className="mt-2 text-center border-t border-border/30 pt-2">
+           <div className="flex items-center justify-center gap-2">
+             <Car className="h-4 w-4 text-primary" />
+             <p className="text-sm font-medium text-muted-foreground">
+               {totalCars} {totalCars === 1 ? "Veículo Encontrado" : "Veículos Encontrados"}
+             </p>
+           </div>
+         </div>
       </div>
     </div>
   );

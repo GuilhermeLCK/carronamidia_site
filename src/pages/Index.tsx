@@ -33,6 +33,8 @@ const Index = () => {
     return saved ? new Set(JSON.parse(saved)) : new Set();
   });
 
+  const [totalCars, setTotalCars] = useState<number>(0);
+
   useEffect(() => {
     localStorage.setItem('carFavorites', JSON.stringify(Array.from(localFavorites)));
   }, [localFavorites]);
@@ -71,6 +73,10 @@ const Index = () => {
     setFilters(newFilters);
   };
 
+  const handleTotalCarsChange = (total: number) => {
+    setTotalCars(total);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-dark">
       <HeroSection />
@@ -82,6 +88,7 @@ const Index = () => {
           getLocalFavoritesCars,
           localFavorites,
         }}
+        totalCars={totalCars}
       />
       <CarGrid
         filters={filters}
@@ -91,6 +98,7 @@ const Index = () => {
           getLocalFavoritesCars,
           localFavorites,
         }}
+        onTotalCarsChange={handleTotalCarsChange}
       />
       <Footer />
       <FloatingButtons />
