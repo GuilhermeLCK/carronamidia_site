@@ -98,11 +98,7 @@ const HeroSection = () => {
           )}
         </div>
 
-        <div className="mt-6 xs:mt-4 md:mt-12">
-          <h2 className="text-3xl xs:text-xl md:text-4xl font-black text-center text-foreground tracking-wide">
-            CONFIRA NOSSO ESTOQUE
-          </h2>
-        </div>
+
       </div>
     </section>
   );

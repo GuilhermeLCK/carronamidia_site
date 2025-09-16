@@ -240,6 +240,12 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
       className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto">
+        {/* Título principal fixo */}
+        <div className="text-center mb-4">
+          <h1 className="text-2xl xs:text-lg md:text-3xl font-black text-foreground tracking-wide">
+            CONFIRA NOSSO ESTOQUE
+          </h1>
+        </div>
         <div className="mb-2 md:mb-4">
           <div className="flex items-center gap-3 xs:gap-2">
             {/* Input de busca */}
@@ -254,23 +260,21 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
               />
             </div>
             
-            {/* Botão Filtros Avançados */}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-2 px-4 h-12 xs:h-8 md:h-14 hover:bg-muted/50 transition-all duration-200 rounded-xl border border-border/50"
-            >
-              <SlidersHorizontal className="h-4 w-4 xs:h-3 xs:w-3 md:h-5 md:w-5 text-red-600" />
-              <span className="text-sm xs:text-xs md:text-base font-medium whitespace-nowrap">
-                Filtros Avançados
-              </span>
-              {isExpanded ? (
-                <ChevronUp className="h-4 w-4 xs:h-3 xs:w-3 md:h-5 md:w-5" />
-              ) : (
-                <ChevronDown className="h-4 w-4 xs:h-3 xs:w-3 md:h-5 md:w-5" />
-              )}
-            </Button>
+            {/* Filtros Avançados - estilo discreto */}
+            <div className="flex items-center justify-end">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="flex items-center gap-1 text-xs font-medium text-muted-foreground hover:text-foreground transition-colors underline decoration-1 underline-offset-2"
+              >
+                <SlidersHorizontal className="h-3 w-3 text-red-600" />
+                <span>Filtros Avançados</span>
+                {isExpanded ? (
+                  <ChevronUp className="h-3 w-3" />
+                ) : (
+                  <ChevronDown className="h-3 w-3" />
+                )}
+              </button>
+            </div>
             
             {/* Botão Limpar Filtros */}
             {!isExpanded && hasActiveFilters() && (
