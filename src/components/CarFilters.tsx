@@ -167,7 +167,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     if (!isExpanded) return;
 
     const target = e.target as HTMLElement;
-    if (target.closest('button, select, input, [role="combobox"], [data-radix-collection-item]')) {
+    if (target.closest('button, select, input, label, [role="combobox"], [data-radix-collection-item], [data-state]')) {
       return;
     }
 
