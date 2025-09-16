@@ -240,50 +240,49 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
       className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto">
-        <div className="flex items-center justify-between mb-2 md:mb-4">
-          <div className="flex items-center gap-2 xs:gap-1">
-            <SlidersHorizontal className="h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-primary" />
-            <h2 className="text-xl xs:text-base md:text-2xl font-semibold">
-              Filtrar Veículos
-            </h2>
-          </div>
-
-          <div className="flex items-center gap-2">
+        <div className="mb-2 md:mb-4">
+          <div className="flex items-center gap-3 xs:gap-2">
+            {/* Input de busca */}
+            <div className="relative flex-1">
+              <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
+              <Input
+                type="text"
+                placeholder="Buscar por modelo, marca..."
+                value={filters.searchTerm}
+                onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
+                className="pl-10 xs:pl-8 md:pl-12 pr-4 h-12 xs:h-8 md:h-14 text-base xs:text-xs md:text-lg bg-input/50 border-border/50 focus:border-primary/50 rounded-xl transition-all duration-200"
+              />
+            </div>
+            
+            {/* Botão Filtros Avançados */}
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="flex items-center gap-2 px-4 h-12 xs:h-8 md:h-14 hover:bg-muted/50 transition-all duration-200 rounded-xl border border-border/50"
+            >
+              <SlidersHorizontal className="h-4 w-4 xs:h-3 xs:w-3 md:h-5 md:w-5 text-red-600" />
+              <span className="text-sm xs:text-xs md:text-base font-medium whitespace-nowrap">
+                Filtros Avançados
+              </span>
+              {isExpanded ? (
+                <ChevronUp className="h-4 w-4 xs:h-3 xs:w-3 md:h-5 md:w-5" />
+              ) : (
+                <ChevronDown className="h-4 w-4 xs:h-3 xs:w-3 md:h-5 md:w-5" />
+              )}
+            </Button>
+            
+            {/* Botão Limpar Filtros */}
             {!isExpanded && hasActiveFilters() && (
               <Button
                 variant="outline"
                 size="sm"
                 onClick={clearFilters}
-                className="text-xs xs:text-[10px] md:text-sm px-2 xs:px-1 md:px-3 h-8 xs:h-6 md:h-9 border-destructive/50 text-destructive hover:bg-destructive/10"
+                className="text-xs xs:text-[10px] md:text-sm px-3 h-12 xs:h-8 md:h-14 border-destructive/50 text-destructive hover:bg-destructive/10 rounded-xl"
               >
-                Limpar Filtros
+                Limpar
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsExpanded(!isExpanded)}
-              className="flex items-center gap-1 px-3 py-1 h-8 xs:h-6 md:h-9 hover:bg-muted/50 transition-all duration-200 rounded-lg"
-            >
-              <span className="text-xs xs:text-[10px] md:text-sm">Filtros Avançados</span>
-              {isExpanded ? (
-                <ChevronUp className="h-3 w-3 xs:h-2 xs:w-2 md:h-4 md:w-4" />
-              ) : (
-                <ChevronDown className="h-3 w-3 xs:h-2 xs:w-2 md:h-4 md:w-4" />
-              )}
-            </Button>
-          </div>
-        </div>
-
-        <div className="mb-2 md:mb-4 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
-          <div className="relative">
-            <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por modelo do veículo..."
-              value={filters.searchTerm}
-              onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
-              className="pl-10 xs:pl-7 md:pl-12 h-12 xs:h-8 md:h-14 text-base xs:text-xs md:text-lg bg-input/50 border-border/50 focus:border-primary/50 focus:bg-input transition-all rounded-xl shadow-sm hover:shadow-md"
-            />
           </div>
         </div>
 
