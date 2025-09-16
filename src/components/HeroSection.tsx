@@ -98,7 +98,7 @@ const HeroSection = () => {
           )}
         </div>
 
-        <div className="mt-6 xs:mt-0 md:mt-12">
+        <div className="mt-6 xs:mt-4 md:mt-12">
           <div className="bg-gradient-to-r from-background/80 to-muted/20 backdrop-blur-sm rounded-xl xs:rounded-lg p-6 xs:p-4 border border-border/50">
             <h3 className="text-xl xs:text-lg font-semibold text-center mb-6 xs:mb-4">
               Entre em Contato
