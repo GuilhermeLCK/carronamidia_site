@@ -33,11 +33,17 @@ const Index = () => {
       const newFavorites = new Set(prev);
       if (newFavorites.has(carId)) {
         newFavorites.delete(carId);
+        toast({
+          title: "Veículo removido!",
+          description: "Veículo foi retirado dos seus favoritos.",
+          className: "bg-gray-100 text-black border-gray-200",
+        });
       } else {
         newFavorites.add(carId);
         toast({
           title: "Veículo favoritado!",
           description: "O veículo foi adicionado aos seus favoritos.",
+          className: "bg-gray-100 text-black border-gray-200",
         });
       }
       return newFavorites;
