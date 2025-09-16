@@ -147,7 +147,6 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
             <Badge
               className="bg-gradient-to-r from-purple-600 to-orange-600 text-white border border-purple-500 font-semibold text-xs px-2 py-1 shadow-lg font-mono"
               style={{
-                // animationDuration: "4s",
                 fontFamily: "'Inter', 'Roboto', sans-serif",
               }}
             >
@@ -155,8 +154,6 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
             </Badge>
           </div>
         )}
-        
-
 
         <div className="absolute top-2 xs:top-1 left-2 xs:left-1 flex flex-col gap-1"></div>
       </div>
@@ -320,18 +317,21 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
               <Eye className="h-3 w-3 xs:h-2.5 xs:w-2.5 md:h-4 md:w-4 mr-1 xs:mr-0.5" />
               <span className="xs:text-xs md:text-base">Detalhes</span>
             </Button>
-            
-            {/* Botão de Favoritos */}
+
             {favoritesManager && (
               <Button
                 variant="outline"
                 size="sm"
-                className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-1 md:px-3 py-0.5 md:py-2 flex-shrink-0"
+                className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-2 md:px-3 py-0.5 md:py-2 flex-shrink-0"
                 onClick={() => favoritesManager.toggleLocalFavorite(car.id)}
-                aria-label={favoritesManager.isLocalFavorite(car.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+                aria-label={
+                  favoritesManager.isLocalFavorite(car.id)
+                    ? "Remover dos favoritos"
+                    : "Adicionar aos favoritos"
+                }
               >
                 <Heart
-                  className={`h-3 w-3 xs:h-2.5 xs:w-2.5 md:h-4 md:w-4 transition-colors ${
+                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${
                     favoritesManager.isLocalFavorite(car.id)
                       ? "fill-red-500 text-red-500"
                       : "text-gray-600 hover:text-red-500"

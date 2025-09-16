@@ -6,13 +6,13 @@
 export const createSlug = (text: string): string => { 
   return text 
     .toLowerCase() 
-    .normalize('NFD') // Normaliza caracteres acentuados 
-    .replace(/[\u0300-\u036f]/g, '') // Remove acentos 
-    .replace(/[^a-z0-9\s-]/g, '') // Remove caracteres especiais 
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s-]/g, '') 
     .trim() 
-    .replace(/\s+/g, '-') // Substitui espaços por hífens 
-    .replace(/-+/g, '-') // Remove hífens duplicados 
-    .replace(/^-|-$/g, ''); // Remove hífens do início e fim 
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, ''); 
 }; 
 
 /** 
@@ -35,7 +35,7 @@ export const generateCarUrl = (carTitle: string, carId: string, includeId: boole
  */ 
 export const generateUniqueCarUrl = (carTitle: string, carId: string): string => { 
   const slug = createSlug(carTitle); 
-  // Usar os últimos 8 caracteres do ID como identificador único 
+ 
   const uniqueId = carId.slice(-8); 
   return `/galeria/${slug}-${uniqueId}`; 
 }; 

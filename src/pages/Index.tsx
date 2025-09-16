@@ -4,8 +4,10 @@ import CarFilters, {
   CarFilters as CarFiltersType,
 } from "@/components/CarFilters";
 import CarGrid from "@/components/CarGrid";
+import { useToast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const { toast } = useToast();
   const [filters, setFilters] = useState<CarFiltersType>({
     model: "",
     priceMin: "",
@@ -23,29 +25,31 @@ const Index = () => {
     showAll: true,
     showFavorites: false,
   });
-  
-  // Estado para gerenciar favoritos localmente
+
   const [localFavorites, setLocalFavorites] = useState<Set<string>>(new Set());
-  
-  // Funções para gerenciar favoritos localmente
+
   const toggleLocalFavorite = (carId: string) => {
-    setLocalFavorites(prev => {
+    setLocalFavorites((prev) => {
       const newFavorites = new Set(prev);
       if (newFavorites.has(carId)) {
         newFavorites.delete(carId);
       } else {
         newFavorites.add(carId);
+        toast({
+          title: "Veículo favoritado!",
+          description: "O veículo foi adicionado aos seus favoritos.",
+        });
       }
       return newFavorites;
     });
   };
-  
+
   const isLocalFavorite = (carId: string) => {
     return localFavorites.has(carId);
   };
-  
+
   const getLocalFavoritesCars = (cars: any[]) => {
-    return cars.filter(car => localFavorites.has(car.id));
+    return cars.filter((car) => localFavorites.has(car.id));
   };
 
   const handleFilterChange = (newFilters: CarFiltersType) => {
@@ -55,7 +59,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-dark">
       <HeroSection />
-      <CarFilters 
+      <CarFilters
         onFilterChange={handleFilterChange}
         onFavoritesChange={{
           toggleLocalFavorite,
@@ -64,7 +68,7 @@ const Index = () => {
           localFavorites,
         }}
       />
-      <CarGrid 
+      <CarGrid
         filters={filters}
         favoritesManager={{
           toggleLocalFavorite,

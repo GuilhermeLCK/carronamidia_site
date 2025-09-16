@@ -96,7 +96,7 @@ const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
       );
     }
 
-    // Filtro por favoritos locais
+
     if (filters.showFavorites && favoritesManager) {
       filtered = favoritesManager.getLocalFavoritesCars(filtered);
     } else if (!filters.showAll) {
@@ -240,17 +240,17 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
   const containerRef = useRef<HTMLDivElement>(null);
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 12; // Reduced for better performance
+  const itemsPerPage = 12;
   const totalPages = Math.ceil(cars.length / itemsPerPage);
 
-  // Initial load
+
   useEffect(() => {
     const initialItems = cars.slice(0, itemsPerPage);
     setVisibleCars(initialItems);
     setPage(1);
   }, [cars]);
 
-  // Auto-load more cars when scrolling near bottom
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -273,7 +273,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
 
     setIsLoadingMore(true);
 
-    // Simulate loading delay for better UX
+    
     await new Promise((resolve) => setTimeout(resolve, 300));
 
     const nextPage = page + 1;
@@ -300,7 +300,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
         ))}
       </div>
 
-      {/* Loading more indicator */}
+      
       {isLoadingMore && (
         <div className="flex justify-center mt-8">
           <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
@@ -311,7 +311,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
         </div>
       )}
 
-      {/* Load more trigger (invisible) */}
+      
       {page < totalPages && (
         <div
           ref={loadMoreRef}
@@ -331,7 +331,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
         </div>
       )}
 
-      {/* End of results */}
+
       {page >= totalPages && visibleCars.length > 0 && (
         <div className="text-center mt-8 py-4">
           <p className="text-gray-500 text-sm">

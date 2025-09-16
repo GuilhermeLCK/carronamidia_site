@@ -14,7 +14,7 @@ const OptimizedImage = ({ src, alt, className = "" }: OptimizedImageProps) => {
   const [isInView, setIsInView] = useState(false);
   const imgRef = useRef<HTMLDivElement>(null);
 
-  // Intersection Observer for lazy loading
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -33,7 +33,7 @@ const OptimizedImage = ({ src, alt, className = "" }: OptimizedImageProps) => {
     return () => observer.disconnect();
   }, []);
 
-  // Load image only when in view
+
   useEffect(() => {
     if (!src || !isInView) return;
     

@@ -117,7 +117,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
         showFavorites: false,
       };
     } else {
-      // Desativar todos os outros filtros e ativar apenas o selecionado
       newFilters = {
         ...filters,
         isZeroKm: tag === "isZeroKm",
@@ -188,7 +187,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
             </h2>
           </div>
 
-          {/* Botão Mostrar Filtros - lado direito */}
           <Button
             variant="ghost"
             size="sm"
@@ -204,7 +202,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </Button>
         </div>
 
-        {/* Campo de Busca Rápida por Título */}
         <div className="mb-6 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
           <div className="relative">
             <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
@@ -217,13 +214,9 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </div>
         </div>
 
-        {/* Filtros por Tags */}
         <div className="mb-6">
           <div className="max-w-5xl mx-auto">
-            {/* Layout mobile: Favoritos e Estoque lado a lado em cima, demais lado a lado embaixo */}
-            {/* Layout desktop: todos lado a lado */}
             <div className="flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4">
-              {/* Primeira linha mobile: Estoque Completo e Favoritos */}
               <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
                 <Button
                   variant={filters.showAll ? "default" : "outline"}
@@ -244,7 +237,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                 </Button>
               </div>
 
-              {/* Segunda linha mobile: demais filtros lado a lado */}
               <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
                 <Button
                   variant={filters.isSemiNew ? "default" : "outline"}
@@ -277,11 +269,9 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
           </div>
         </div>
 
-        {/* Filtros Detalhados - Expansíveis */}
         {isExpanded && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xs:gap-2 md:gap-5">
-              {/* Year */}
               <Select
                 value={filters.year}
                 onValueChange={(value) => handleFilterChange("year", value)}
@@ -302,7 +292,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                 </SelectContent>
               </Select>
 
-              {/* Fuel Type */}
               <Select
                 value={filters.fuelType}
                 onValueChange={(value) => handleFilterChange("fuelType", value)}
@@ -338,7 +327,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                 </SelectContent>
               </Select>
 
-              {/* Transmission */}
               <Select
                 value={filters.transmission}
                 onValueChange={(value) =>
@@ -364,7 +352,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                 </SelectContent>
               </Select>
 
-              {/* Category */}
               <Select
                 value={filters.category}
                 onValueChange={(value) => handleFilterChange("category", value)}
@@ -418,7 +405,6 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
                 </SelectContent>
               </Select>
 
-              {/* Shielding */}
               <Select
                 value={
                   filters.isShielding === undefined
