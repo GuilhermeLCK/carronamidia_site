@@ -202,29 +202,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     setCurrentY(0);
   }, [isDragging, isExpanded, startY, currentY]);
 
-  useEffect(() => {
-    let timeoutId: NodeJS.Timeout;
-    
-    const handleScroll = () => {
-      if (isExpanded) {
-        clearTimeout(timeoutId);
-        timeoutId = setTimeout(() => {
-          setIsExpanded(false);
-        }, 100);
-      }
-    };
 
-    if (isExpanded) {
-      timeoutId = setTimeout(() => {
-        window.addEventListener('scroll', handleScroll, { passive: true });
-      }, 500);
-    }
-
-    return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [isExpanded]);
 
   const years = Array.from({ length: 15 }, (_, i) =>
     (new Date().getFullYear() - i).toString()
