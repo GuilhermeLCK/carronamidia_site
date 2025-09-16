@@ -143,18 +143,18 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
 
       return 0;
     });
-    
+
     // Notificar o total de carros filtrados
     if (onTotalCarsChange) {
       onTotalCarsChange(sorted.length);
     }
-    
+
     return sorted;
   }, [cars, filters, onTotalCarsChange]);
 
   if (loading) {
     return (
-      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-3">
+      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-px xs:py-px md:py-3 ">
         <div className="flex items-center gap-3 mb-8">
           <CarIcon className="h-6 w-6 xs:h-5 xs:w-5 text-primary" />
           <div className="h-6 bg-gray-300 rounded w-48 animate-pulse"></div>
@@ -175,7 +175,7 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
 
   if (error && cars.length === 0) {
     return (
-      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-12">
+      <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-0 md:py-12">
         <div className="text-center py-16">
           <AlertCircle className="h-16 w-16 text-destructive mx-auto mb-4" />
           <h3 className="text-xl font-semibold mb-2">
@@ -194,7 +194,7 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
   }
 
   return (
-    <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-12">
+    <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-0 md:py-12">
       {error && cars.length > 0 && (
         <Alert className="mb-6 border-orange-200 bg-orange-50">
           <AlertCircle className="h-4 w-4 text-orange-600" />
@@ -293,7 +293,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
   return (
     <div>
       <div
-        className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1"
+        className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 "
         ref={containerRef}
       >
         {visibleCars.map((car, index) => (

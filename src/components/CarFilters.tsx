@@ -215,12 +215,17 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 100);
+      setIsScrolled(scrollY > 300)
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+
+  useEffect(() => {
+    setIsStockOptionsExpanded(false);
+  }, [isScrolled]);
 
 
 
@@ -698,16 +703,16 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
             </div>
           </div>
         </div>
-        
+
         {/* Contador de veículos no final */}
-         <div className="mt-2 text-center border-t border-border/30 pt-2">
-           <div className="flex items-center justify-center gap-2">
-             <Car className="h-4 w-4 text-primary" />
-             <p className="text-sm font-medium text-muted-foreground">
-               {totalCars} {totalCars === 1 ? "Veículo Encontrado" : "Veículos Encontrados"}
-             </p>
-           </div>
-         </div>
+          <div className="mt-1 xs:mt-0.5 text-center border-t border-border/30 pt-1 xs:pt-0.5">
+            <div className="flex items-center justify-center gap-2">
+              <Car className="h-4 w-4 text-primary" />
+              <p className="text-sm font-medium text-muted-foreground">
+                {totalCars} {totalCars === 1 ? "Veículo Encontrado" : "Veículos Encontrados"}
+              </p>
+            </div>
+          </div>
       </div>
     </div>
   );
