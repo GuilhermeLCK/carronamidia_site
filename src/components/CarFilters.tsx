@@ -165,6 +165,12 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
     if (!isExpanded) return;
+
+    const target = e.target as HTMLElement;
+    if (target.closest('button, select, input, [role="combobox"], [data-radix-collection-item]')) {
+      return;
+    }
+
     setStartY(e.touches[0].clientY);
     setIsDragging(true);
   }, [isExpanded]);
@@ -173,7 +179,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
     if (!isDragging || !isExpanded) return;
     const currentY = e.touches[0].clientY;
     setCurrentY(currentY);
-    
+
     const deltaY = startY - currentY;
     if (deltaY > 0) {
       const progress = Math.min(deltaY / 100, 1);
@@ -186,17 +192,17 @@ const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
 
   const handleTouchEnd = useCallback(() => {
     if (!isDragging || !isExpanded) return;
-    
+
     const deltaY = startY - currentY;
     if (deltaY > 50) {
       setIsExpanded(false);
     }
-    
+
     if (expandedContentRef.current) {
       expandedContentRef.current.style.transform = '';
       expandedContentRef.current.style.opacity = '';
     }
-    
+
     setIsDragging(false);
     setStartY(0);
     setCurrentY(0);
