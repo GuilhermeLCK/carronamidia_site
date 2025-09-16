@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Phone, Settings, Star, Truck, Shield, Eye } from "lucide-react";
+import { Phone, Settings, Star, Truck, Shield, Eye, Heart } from "lucide-react";
 import { memo } from "react";
 import OptimizedImage from "./OptimizedImage";
 import { generateCarLink } from "@/utils/urlUtils";
@@ -50,9 +50,15 @@ export interface Car {
 
 interface CarCardProps {
   car: Car;
+  favoritesManager?: {
+    toggleLocalFavorite: (carId: string) => void;
+    isLocalFavorite: (carId: string) => boolean;
+    getLocalFavoritesCars: (cars: any[]) => any[];
+    localFavorites: Set<string>;
+  };
 }
 
-const CarCard = memo(function CarCard({ car }: CarCardProps) {
+const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
   const formatCurrency = (value: string | number): string => {
     try {
       if (!value || value === "" || value === "0") return "Consulte";
@@ -149,6 +155,8 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
             </Badge>
           </div>
         )}
+        
+
 
         <div className="absolute top-2 xs:top-1 left-2 xs:left-1 flex flex-col gap-1"></div>
       </div>
@@ -300,17 +308,38 @@ const CarCard = memo(function CarCard({ car }: CarCardProps) {
             );
           })()}
 
-          <Button
-            className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-1 md:px-6 py-0.5 md:py-2 w-full xs:w-full md:w-auto mt-auto"
-            size="sm"
-            onClick={() => {
-              const externalLink = generateCarLink(car.title, car.id);
-              window.open(externalLink, "_blank");
-            }}
-          >
-            <Eye className="h-3 w-3 xs:h-2.5 xs:w-2.5 md:h-4 md:w-4 mr-1 xs:mr-0.5" />
-            <span className="xs:text-xs md:text-base">Detalhes</span>
-          </Button>
+          <div className="flex gap-2 mt-auto">
+            <Button
+              className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-1 md:px-6 py-0.5 md:py-2 flex-1"
+              size="sm"
+              onClick={() => {
+                const externalLink = generateCarLink(car.title, car.id);
+                window.open(externalLink, "_blank");
+              }}
+            >
+              <Eye className="h-3 w-3 xs:h-2.5 xs:w-2.5 md:h-4 md:w-4 mr-1 xs:mr-0.5" />
+              <span className="xs:text-xs md:text-base">Detalhes</span>
+            </Button>
+            
+            {/* Botão de Favoritos */}
+            {favoritesManager && (
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-1 md:px-3 py-0.5 md:py-2 flex-shrink-0"
+                onClick={() => favoritesManager.toggleLocalFavorite(car.id)}
+                aria-label={favoritesManager.isLocalFavorite(car.id) ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+              >
+                <Heart
+                  className={`h-3 w-3 xs:h-2.5 xs:w-2.5 md:h-4 md:w-4 transition-colors ${
+                    favoritesManager.isLocalFavorite(car.id)
+                      ? "fill-red-500 text-red-500"
+                      : "text-gray-600 hover:text-red-500"
+                  }`}
+                />
+              </Button>
+            )}
+          </div>
         </div>
       </CardContent>
     </Card>

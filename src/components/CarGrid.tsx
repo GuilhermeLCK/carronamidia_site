@@ -9,9 +9,15 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface CarGridProps {
   filters: CarFilters;
+  favoritesManager?: {
+    toggleLocalFavorite: (carId: string) => void;
+    isLocalFavorite: (carId: string) => boolean;
+    getLocalFavoritesCars: (cars: any[]) => any[];
+    localFavorites: Set<string>;
+  };
 }
 
-const CarGrid = ({ filters }: CarGridProps) => {
+const CarGrid = ({ filters, favoritesManager }: CarGridProps) => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -90,7 +96,10 @@ const CarGrid = ({ filters }: CarGridProps) => {
       );
     }
 
-    if (!filters.showAll) {
+    // Filtro por favoritos locais
+    if (filters.showFavorites && favoritesManager) {
+      filtered = favoritesManager.getLocalFavoritesCars(filtered);
+    } else if (!filters.showAll) {
       filtered = filtered.filter((car) => {
         if (filters.isZeroKm && car.isZeroKm) return true;
         if (filters.isConsignment && car.isConsignment) return true;
@@ -201,7 +210,7 @@ const CarGrid = ({ filters }: CarGridProps) => {
           <h2 className="text-2xl xs:text-lg md:text-2xl font-bold text-gray-900 mb-6 xs:mb-4">
             Confira nossos carros
           </h2>
-          <VirtualizedCarGrid cars={filteredAndSortedCars} />
+          <VirtualizedCarGrid cars={filteredAndSortedCars} favoritesManager={favoritesManager} />
         </div>
       )}
       {filteredAndSortedCars.length === 0 && (
@@ -217,9 +226,15 @@ const CarGrid = ({ filters }: CarGridProps) => {
 
 interface VirtualizedCarGridProps {
   cars: Car[];
+  favoritesManager?: {
+    toggleLocalFavorite: (carId: string) => void;
+    isLocalFavorite: (carId: string) => boolean;
+    getLocalFavoritesCars: (cars: any[]) => any[];
+    localFavorites: Set<string>;
+  };
 }
 
-const VirtualizedCarGrid = ({ cars }: VirtualizedCarGridProps) => {
+const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps) => {
   const [visibleCars, setVisibleCars] = useState<Car[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -277,7 +292,11 @@ const VirtualizedCarGrid = ({ cars }: VirtualizedCarGridProps) => {
         ref={containerRef}
       >
         {visibleCars.map((car, index) => (
-          <CarCard key={`${car.id}-${index}`} car={car} />
+          <CarCard 
+            key={`${car.id}-${index}`} 
+            car={car} 
+            favoritesManager={favoritesManager}
+          />
         ))}
       </div>
 

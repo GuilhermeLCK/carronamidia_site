@@ -9,15 +9,23 @@ import {
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
+
 import {
   Search,
   SlidersHorizontal,
   ChevronDown,
   ChevronUp,
+  Heart,
 } from "lucide-react";
 
 interface FilterProps {
   onFilterChange: (filters: CarFilters) => void;
+  onFavoritesChange?: {
+    toggleLocalFavorite: (carId: string) => void;
+    isLocalFavorite: (carId: string) => boolean;
+    getLocalFavoritesCars: (cars: any[]) => any[];
+    localFavorites: Set<string>;
+  };
 }
 
 export interface CarFilters {
@@ -35,12 +43,14 @@ export interface CarFilters {
   isConsignment: boolean;
   isSemiNew: boolean;
   showAll: boolean;
+  showFavorites: boolean;
 }
 
-const CarFilters = ({ onFilterChange }: FilterProps) => {
+const CarFilters = ({ onFilterChange, onFavoritesChange }: FilterProps) => {
   const [isSticky, setIsSticky] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const filtersRef = useRef<HTMLDivElement>(null);
+  const localFavorites = onFavoritesChange?.localFavorites || new Set<string>();
   const [filters, setFilters] = useState<CarFilters>({
     model: "",
     priceMin: "",
@@ -56,11 +66,12 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     isConsignment: false,
     isSemiNew: false,
     showAll: true,
+    showFavorites: false,
   });
 
   useEffect(() => {
     let ticking = false;
-    
+
     const handleScroll = () => {
       if (!ticking) {
         requestAnimationFrame(() => {
@@ -76,11 +87,11 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-   }, [isExpanded]);
+  }, [isExpanded]);
 
   const handleFilterChange = (
     key: keyof CarFilters,
@@ -103,6 +114,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
         isConsignment: false,
         isSemiNew: false,
         showAll: true,
+        showFavorites: false,
       };
     } else {
       // Desativar todos os outros filtros e ativar apenas o selecionado
@@ -112,9 +124,23 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
         isConsignment: tag === "isConsignment",
         isSemiNew: tag === "isSemiNew",
         showAll: false,
+        showFavorites: false,
       };
     }
 
+    setFilters(newFilters);
+    onFilterChange(newFilters);
+  };
+
+  const handleFavoritesFilter = () => {
+    const newFilters = {
+      ...filters,
+      showFavorites: true,
+      showAll: false,
+      isZeroKm: false,
+      isConsignment: false,
+      isSemiNew: false,
+    };
     setFilters(newFilters);
     onFilterChange(newFilters);
   };
@@ -135,6 +161,7 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
       isConsignment: false,
       isSemiNew: false,
       showAll: true,
+      showFavorites: false,
     };
     setFilters(emptyFilters);
     onFilterChange(emptyFilters);
@@ -160,6 +187,8 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
               Filtrar Veículos
             </h2>
           </div>
+
+          {/* Botão Mostrar Filtros - lado direito */}
           <Button
             variant="ghost"
             size="sm"
@@ -175,67 +204,75 @@ const CarFilters = ({ onFilterChange }: FilterProps) => {
           </Button>
         </div>
 
-        {/* Filtros Rápidos por Tags */}
+        {/* Campo de Busca Rápida por Título */}
+        <div className="mb-6 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
+          <div className="relative">
+            <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
+            <Input
+              placeholder="Buscar por modelo do veículo..."
+              value={filters.searchTerm}
+              onChange={(e) => handleFilterChange("searchTerm", e.target.value)}
+              className="pl-10 xs:pl-7 md:pl-12 h-12 xs:h-8 md:h-14 text-base xs:text-xs md:text-lg bg-input/50 border-border/50 focus:border-primary/50 focus:bg-input transition-all rounded-xl shadow-sm hover:shadow-md"
+            />
+          </div>
+        </div>
+
+        {/* Filtros por Tags */}
         <div className="mb-6">
-          <h3 className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-4 xs:mb-2 md:mb-5 text-center">
-            Filtros Rápidos
-          </h3>
-          <div className="max-w-4xl mx-auto">
-            {/* Layout mobile: Estoque Completo em cima, outros 3 embaixo */}
-            {/* Layout desktop: todos os 4 lado a lado */}
+          <div className="max-w-5xl mx-auto">
+            {/* Layout mobile: Favoritos e Estoque lado a lado em cima, demais lado a lado embaixo */}
+            {/* Layout desktop: todos lado a lado */}
             <div className="flex flex-col md:flex-row gap-3 xs:gap-2 md:gap-4">
-              <div className="md:flex-1">
+              {/* Primeira linha mobile: Estoque Completo e Favoritos */}
+              <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
                 <Button
                   variant={filters.showAll ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTagFilter("showAll")}
-                  className="w-full h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Estoque Completo
                 </Button>
+
+                <Button
+                  variant={filters.showFavorites ? "default" : "outline"}
+                  size="sm"
+                  onClick={() => handleFavoritesFilter()}
+                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md flex items-center justify-center gap-2"
+                >
+                  Favoritos ({localFavorites.size})
+                </Button>
               </div>
 
-              <div className="grid grid-cols-3 md:grid-cols-3 gap-2 xs:gap-1 md:gap-4 md:flex-1">
+              {/* Segunda linha mobile: demais filtros lado a lado */}
+              <div className="flex xs:flex-row gap-3 xs:gap-2 md:contents">
                 <Button
                   variant={filters.isSemiNew ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTagFilter("isSemiNew")}
-                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-6 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Semi Novo
                 </Button>
+
                 <Button
                   variant={filters.isZeroKm ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTagFilter("isZeroKm")}
-                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-6 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Zero KM
                 </Button>
+
                 <Button
                   variant={filters.isConsignment ? "default" : "outline"}
                   size="sm"
                   onClick={() => handleTagFilter("isConsignment")}
-                  className="w-full h-12 xs:h-8 md:h-14 px-2 xs:px-1 md:px-6 text-base xs:text-xs md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
+                  className="flex-1 xs:flex-1 md:flex-1 h-12 xs:h-10 md:h-14 px-6 xs:px-4 md:px-8 text-base xs:text-sm md:text-lg font-medium rounded-xl transition-all duration-200 shadow-sm hover:shadow-md"
                 >
                   Repasse
                 </Button>
               </div>
-            </div>
-          </div>
-
-          {/* Campo de Busca Rápida por Título */}
-          <div className="mt-8 xs:mt-4 md:mt-10 max-w-lg xs:max-w-md md:max-w-xl mx-auto">
-            <div className="relative">
-              <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
-              <Input
-                placeholder="Buscar por modelo do veículo..."
-                value={filters.searchTerm}
-                onChange={(e) =>
-                  handleFilterChange("searchTerm", e.target.value)
-                }
-                className="pl-10 xs:pl-7 md:pl-12 h-12 xs:h-8 md:h-14 text-base xs:text-xs md:text-lg bg-input/50 border-border/50 focus:border-primary/50 focus:bg-input transition-all rounded-xl shadow-sm hover:shadow-md"
-              />
             </div>
           </div>
         </div>
