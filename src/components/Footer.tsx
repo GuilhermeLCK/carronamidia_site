@@ -79,7 +79,7 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-border/30 mt-8 pt-6">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-center md:justify-between items-center gap-4">
             <p className="text-muted-foreground text-sm">
               © {new Date().getFullYear()} Carro na Mídia. Todos os direitos reservados.
             </p>
