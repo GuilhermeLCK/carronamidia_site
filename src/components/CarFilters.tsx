@@ -119,6 +119,9 @@ const CarFilters = ({
 
     setFilters(newFilters);
     onFilterChange(newFilters);
+    
+    // Scroll para o topo da listagem
+    scrollToTop();
   };
 
   const handleFavoritesFilter = () => {
@@ -132,6 +135,9 @@ const CarFilters = ({
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
+    
+    // Scroll para o topo da listagem
+    scrollToTop();
   };
 
   const clearFilters = () => {

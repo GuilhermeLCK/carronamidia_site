@@ -9,6 +9,7 @@ const HeroSection = () => {
   const [loadError, setLoadError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const [hasBeenHidden, setHasBeenHidden] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -41,29 +42,27 @@ const HeroSection = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Detecta quando o menu de filtros fica sticky para ocultar o vídeo
   useEffect(() => {
     const handleScroll = () => {
-      // Procura pelo elemento dos filtros que tem classe sticky
+      if (hasBeenHidden) return;
+
       const filtersElement = document.querySelector('#filters');
-      
+
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
-        // Se o elemento dos filtros está no topo (sticky ativo), oculta o vídeo
         if (rect.top <= 0) {
           setIsHidden(true);
-        } else {
-          setIsHidden(false);
+          setHasBeenHidden(true);
         }
       }
     };
 
     window.addEventListener('scroll', handleScroll);
-    
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
     };
-  }, []);
+  }, [hasBeenHidden]);
 
 
 
