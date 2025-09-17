@@ -692,22 +692,24 @@ const CarFilters = ({
               </div>
             </div>
 
-            <div className="mt-6 xs:mt-3 md:mt-8">
-              <label className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-3 xs:mb-1 md:mb-4 block">
+            <div className="mt-6 xs:mt-3 md:mt-8 px-2 xs:px-1 md:px-0">
+              <label className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-3 xs:mb-2 md:mb-4 block text-center xs:text-center md:text-left">
                 Faixa de Preço: R$ {filters.priceRange[0].toLocaleString()} - R${" "}
                 {filters.priceRange[1].toLocaleString()}
               </label>
-              <Slider
-                defaultValue={[0, 1000000]}
-                value={filters.priceRange}
-                onValueChange={(value) =>
-                  handleFilterChange("priceRange", value as [number, number])
-                }
-                max={1000000}
-                min={0}
-                step={10000}
-                className="w-full"
-              />
+              <div className="w-full max-w-sm xs:max-w-xs md:max-w-full mx-auto xs:mx-auto md:mx-0">
+                <Slider
+                  defaultValue={[0, 1000000]}
+                  value={filters.priceRange}
+                  onValueChange={(value) =>
+                    handleFilterChange("priceRange", value as [number, number])
+                  }
+                  max={1000000}
+                  min={0}
+                  step={5000}
+                  className="w-full"
+                />
+              </div>
             </div>
 
             <div className="relative flex justify-center mt-6 xs:mt-3 md:mt-8">

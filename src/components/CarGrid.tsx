@@ -47,6 +47,7 @@ const CarGrid = ({
   }, []);
 
   const filteredAndSortedCars = useMemo(() => {
+    if (!cars || cars.length === 0) return [];
     let filtered = cars.filter((car) => car.active);
 
     if (filters.year) {
@@ -119,7 +120,9 @@ const CarGrid = ({
             ? car.createdAt.toDate()
             : new Date(car.createdAt);
           const now = new Date();
-          const timeDifference = now.getTime() - createdDate.getTime();
+          const timeDifference = Math.abs(
+            now.getTime() - createdDate.getTime()
+          );
           const hoursDifference = timeDifference / (1000 * 3600);
           return hoursDifference <= 24;
         } catch {
@@ -129,10 +132,37 @@ const CarGrid = ({
 
       const aIsNew = isRecentlyAdded(a);
       const bIsNew = isRecentlyAdded(b);
+      const aHasUpdated = !!a.updatedAt;
+      const bHasUpdated = !!b.updatedAt;
 
-      if (aIsNew && !bIsNew) return -1;
-      if (!aIsNew && bIsNew) return 1;
+      if (aHasUpdated && !bHasUpdated) {
+        return -1;
+      }
+      if (!aHasUpdated && bHasUpdated) {
+        return 1;
+      }
 
+      if (aHasUpdated && bHasUpdated) {
+        try {
+          const aUpdatedDate = a.updatedAt.toDate
+            ? a.updatedAt.toDate()
+            : new Date(a.updatedAt);
+          const bUpdatedDate = b.updatedAt.toDate
+            ? b.updatedAt.toDate()
+            : new Date(b.updatedAt);
+
+          return bUpdatedDate.getTime() - aUpdatedDate.getTime();
+        } catch {
+          return 0;
+        }
+      }
+
+      if (aIsNew && !bIsNew) {
+        return -1;
+      }
+      if (!aIsNew && bIsNew) {
+        return 1;
+      }
       if (aIsNew && bIsNew && a.createdAt && b.createdAt) {
         const aDate = a.createdAt.toDate
           ? a.createdAt.toDate()
@@ -156,13 +186,14 @@ const CarGrid = ({
       return 0;
     });
 
-    // Notificar o total de carros filtrados
-    if (onTotalCarsChange) {
-      onTotalCarsChange(sorted.length);
-    }
-
     return sorted;
-  }, [cars, filters, onTotalCarsChange]);
+  }, [cars, filters]);
+
+  useEffect(() => {
+    if (onTotalCarsChange) {
+      onTotalCarsChange(filteredAndSortedCars.length);
+    }
+  }, [filteredAndSortedCars.length, onTotalCarsChange]);
 
   if (loading) {
     return (

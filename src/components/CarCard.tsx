@@ -23,6 +23,7 @@ export interface Car {
   images: ProcessedImage[];
   active: boolean;
   createdAt: any;
+  updatedAt: any;
   year?: number;
   km?: number;
   inPreparation?: boolean;
@@ -91,7 +92,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
         : new Date(car.createdAt);
 
       const now = new Date();
-      const timeDifference = now.getTime() - createdDate.getTime();
+      const timeDifference = Math.abs(now.getTime() - createdDate.getTime());
       const hoursDifference = timeDifference / (1000 * 3600);
 
       return hoursDifference <= 24;
@@ -148,10 +149,10 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
               className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 font-bold text-xs px-3 py-1 shadow-lg animate-pulse"
               style={{
                 fontFamily: "'Inter', 'Roboto', sans-serif",
-                boxShadow: "0 0 20px rgba(239, 68, 68, 0.6)"
+                boxShadow: "0 0 20px rgba(239, 68, 68, 0.6)",
               }}
             >
-              🔥 NOVIDADE
+              NOVIDADE
             </Badge>
           </div>
         )}
