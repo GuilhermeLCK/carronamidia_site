@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import HeroSection from "@/components/HeroSection";
 import CarFilters, {
   CarFilters as CarFiltersType,
@@ -39,7 +39,7 @@ const Index = () => {
     localStorage.setItem('carFavorites', JSON.stringify(Array.from(localFavorites)));
   }, [localFavorites]);
 
-  const toggleLocalFavorite = (carId: string) => {
+  const toggleLocalFavorite = useCallback((carId: string) => {
     setLocalFavorites((prev) => {
       const newFavorites = new Set(prev);
       if (newFavorites.has(carId)) {
@@ -61,45 +61,42 @@ const Index = () => {
       }
       return newFavorites;
     });
-  };
+  }, [toast]);
 
-  const isLocalFavorite = (carId: string) => {
+  const isLocalFavorite = useCallback((carId: string) => {
     return localFavorites.has(carId);
-  };
+  }, [localFavorites]);
 
-  const getLocalFavoritesCars = (cars: any[]) => {
+  const getLocalFavoritesCars = useCallback((cars: any[]) => {
     return cars.filter((car) => localFavorites.has(car.id));
-  };
+  }, [localFavorites]);
 
-  const handleFilterChange = (newFilters: CarFiltersType) => {
+  const handleFilterChange = useCallback((newFilters: CarFiltersType) => {
     setFilters(newFilters);
-  };
+  }, []);
 
-  const handleTotalCarsChange = (total: number) => {
+  const handleTotalCarsChange = useCallback((total: number) => {
     setTotalCars(total);
-  };
+  }, []);
+
+  const favoritesManager = useMemo(() => ({
+    toggleLocalFavorite,
+    isLocalFavorite,
+    getLocalFavoritesCars,
+    localFavorites,
+  }), [toggleLocalFavorite, isLocalFavorite, getLocalFavoritesCars, localFavorites]);
 
   return (
     <div className="min-h-screen bg-gradient-dark">
       <HeroSection />
       <CarFilters
         onFilterChange={handleFilterChange}
-        onFavoritesChange={{
-          toggleLocalFavorite,
-          isLocalFavorite,
-          getLocalFavoritesCars,
-          localFavorites,
-        }}
+        onFavoritesChange={favoritesManager}
         totalCars={totalCars}
       />
       <CarGrid
         filters={filters}
-        favoritesManager={{
-          toggleLocalFavorite,
-          isLocalFavorite,
-          getLocalFavoritesCars,
-          localFavorites,
-        }}
+        favoritesManager={favoritesManager}
         onTotalCarsChange={handleTotalCarsChange}
       />
       <Footer />

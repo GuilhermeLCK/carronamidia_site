@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, useState } from "react";
+import { useMemo, useRef, useEffect, useState, memo, useCallback } from "react";
 import CarCard, { Car } from "./CarCard";
 import CarCardSkeleton from "./CarCardSkeleton";
 import { CarFilters } from "./CarFilters";
@@ -70,8 +70,9 @@ const CarGrid = ({
         .split(/\s+/)
         .filter((term) => term.length > 0);
       filtered = filtered.filter((car) => {
-        const carText = `${car.model || ""} ${car.brand || ""} ${car.description || ""
-          } ${car.title || ""}`.toLowerCase();
+        const carText = `${car.model || ""} ${car.brand || ""} ${
+          car.description || ""
+        } ${car.title || ""}`.toLowerCase();
         return searchTerms.every((term) => carText.includes(term));
       });
     }
@@ -124,34 +125,40 @@ const CarGrid = ({
         }
 
         if (aHasUpdated && bHasUpdated) {
-          const aDate = a.updatedAt.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt);
-          const bDate = b.updatedAt.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt);
+          const aDate = a.updatedAt.toDate
+            ? a.updatedAt.toDate()
+            : new Date(a.updatedAt);
+          const bDate = b.updatedAt.toDate
+            ? b.updatedAt.toDate()
+            : new Date(b.updatedAt);
           return bDate.getTime() - aDate.getTime();
         }
 
         if (a.updatedAt && b.updatedAt) {
-          const aDate = a.updatedAt.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt);
-          const bDate = b.updatedAt.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt);
+          const aDate = a.updatedAt.toDate
+            ? a.updatedAt.toDate()
+            : new Date(a.updatedAt);
+          const bDate = b.updatedAt.toDate
+            ? b.updatedAt.toDate()
+            : new Date(b.updatedAt);
           return bDate.getTime() - aDate.getTime();
         }
 
         return 0;
       } catch (error) {
-        console.error('Error in sorting:', error);
+        console.error("Error in sorting:", error);
         return 0;
       }
     });
 
     return sorted;
-  }, [cars, filters, onTotalCarsChange, favoritesManager]);
-
+  }, [cars, filters, favoritesManager]);
 
   useEffect(() => {
     if (onTotalCarsChange) {
       onTotalCarsChange(filteredAndSortedCars.length);
     }
   }, [filteredAndSortedCars.length, onTotalCarsChange]);
-
 
   if (loading) {
     return (
@@ -195,7 +202,10 @@ const CarGrid = ({
   }
 
   return (
-    <div id="cars-grid" className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2">
+    <div
+      id="cars-grid"
+      className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2"
+    >
       {error && cars.length > 0 && (
         <Alert className="mb-6 border-orange-200 bg-orange-50">
           <AlertCircle className="h-4 w-4 text-orange-600" />
@@ -242,110 +252,109 @@ interface VirtualizedCarGridProps {
   };
 }
 
-const VirtualizedCarGrid = ({
-  cars,
-  favoritesManager,
-}: VirtualizedCarGridProps) => {
-  const [visibleCars, setVisibleCars] = useState<Car[]>([]);
-  const [isLoadingMore, setIsLoadingMore] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const loadMoreRef = useRef<HTMLDivElement>(null);
-  const [page, setPage] = useState(1);
-  const itemsPerPage = 12;
-  const totalPages = Math.ceil(cars.length / itemsPerPage);
+const VirtualizedCarGrid = memo(
+  ({ cars, favoritesManager }: VirtualizedCarGridProps) => {
+    const [visibleCars, setVisibleCars] = useState<Car[]>([]);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+    const loadMoreRef = useRef<HTMLDivElement>(null);
+    const [page, setPage] = useState(1);
+    const itemsPerPage = 200;
+    const totalPages = Math.ceil(cars.length / itemsPerPage);
 
-  useEffect(() => {
-    const initialItems = cars.slice(0, itemsPerPage);
-    setVisibleCars(initialItems);
-    setPage(1);
-  }, [cars]);
+    useEffect(() => {
+      const initialItems = cars.slice(0, itemsPerPage);
+      setVisibleCars(initialItems);
+      setPage(1);
+    }, [cars]);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && page < totalPages && !isLoadingMore) {
-          loadMoreCars();
-        }
-      },
-      { threshold: 0.1, rootMargin: "100px" }
-    );
+    useEffect(() => {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && page < totalPages && !isLoadingMore) {
+            loadMoreCars();
+          }
+        },
+        { threshold: 0.01, rootMargin: "300px" }
+      );
 
-    if (loadMoreRef.current) {
-      observer.observe(loadMoreRef.current);
-    }
+      if (loadMoreRef.current) {
+        observer.observe(loadMoreRef.current);
+      }
 
-    return () => observer.disconnect();
-  }, [page, totalPages, isLoadingMore]);
+      return () => observer.disconnect();
+    }, [page, totalPages, isLoadingMore]);
 
-  const loadMoreCars = async () => {
-    if (page >= totalPages || isLoadingMore) return;
+    const loadMoreCars = useCallback(async () => {
+      if (page >= totalPages || isLoadingMore) return;
 
-    setIsLoadingMore(true);
+      setIsLoadingMore(true);
 
-    await new Promise((resolve) => setTimeout(resolve, 300));
+      await new Promise((resolve) => setTimeout(resolve, 300));
 
-    const nextPage = page + 1;
-    const endIndex = nextPage * itemsPerPage;
-    const newItems = cars.slice(0, endIndex);
+      const nextPage = page + 1;
+      const endIndex = nextPage * itemsPerPage;
+      const newItems = cars.slice(0, endIndex);
 
-    setVisibleCars(newItems);
-    setPage(nextPage);
-    setIsLoadingMore(false);
-  };
+      setVisibleCars(newItems);
+      setPage(nextPage);
+      setIsLoadingMore(false);
+    }, [page, totalPages, isLoadingMore, cars]);
 
-  return (
-    <div>
-      <div
-        className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 "
-        ref={containerRef}
-      >
-        {visibleCars.map((car, index) => (
-          <CarCard
-            key={`${car.id}-${index}`}
-            car={car}
-            favoritesManager={favoritesManager}
-          />
-        ))}
-      </div>
-
-      {isLoadingMore && (
-        <div className="flex justify-center mt-8">
-          <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 w-full">
-            {Array.from({ length: 5 }).map((_, index) => (
-              <CarCardSkeleton key={`loading-${index}`} />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {page < totalPages && (
+    return (
+      <div>
         <div
-          ref={loadMoreRef}
-          className="h-10 flex justify-center items-center mt-8"
+          className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 "
+          ref={containerRef}
         >
-          {!isLoadingMore && (
-            <Button
-              onClick={loadMoreCars}
-              variant="outline"
-              className="flex items-center gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Carregar mais veículos ({cars.length - visibleCars.length}{" "}
-              restantes)
-            </Button>
-          )}
+          {visibleCars.map((car, index) => (
+            <CarCard
+              key={`${car.id}-${index}`}
+              car={car}
+              favoritesManager={favoritesManager}
+            />
+          ))}
         </div>
-      )}
 
-      {page >= totalPages && visibleCars.length > 0 && (
-        <div className="text-center mt-8 py-4">
-          <p className="text-gray-500 text-sm">
-            Você viu todos os {cars.length} veículos disponíveis
-          </p>
-        </div>
-      )}
-    </div>
-  );
-};
+        {isLoadingMore && (
+          <div className="flex justify-center mt-8">
+            <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 w-full">
+              {Array.from({ length: 5 }).map((_, index) => (
+                <CarCardSkeleton key={`loading-${index}`} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {page < totalPages && (
+          <div
+            ref={loadMoreRef}
+            className="h-10 flex justify-center items-center mt-8"
+          >
+            {!isLoadingMore && (
+              <Button
+                onClick={loadMoreCars}
+                variant="outline"
+                className="flex items-center gap-2"
+              >
+                <RefreshCw className="h-4 w-4" />
+                Carregar mais veículos ({cars.length - visibleCars.length}{" "}
+                restantes)
+              </Button>
+            )}
+          </div>
+        )}
+
+        {page >= totalPages && visibleCars.length > 0 && (
+          <div className="text-center mt-8 py-4">
+            <p className="text-gray-500 text-sm">
+              Você viu todos os {cars.length} veículos disponíveis
+            </p>
+          </div>
+        )}
+      </div>
+    );
+  }
+);
 
 export default CarGrid;

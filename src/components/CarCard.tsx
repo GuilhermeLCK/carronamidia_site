@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Phone, Settings, Star, Truck, Shield, Eye, Heart } from "lucide-react";
-import { memo } from "react";
+import { memo, useCallback, useMemo } from "react";
 import OptimizedImage from "./OptimizedImage";
 import { generateCarLink } from "@/utils/urlUtils";
 
@@ -59,7 +59,7 @@ interface CarCardProps {
 }
 
 const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
-  const formatCurrency = (value: string | number): string => {
+  const formatCurrency = useCallback((value: string | number): string => {
     try {
       if (!value || value === "" || value === "0") return "Consulte";
 
@@ -80,9 +80,9 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
       console.warn("Erro ao formatar moeda:", error);
       return "Consulte";
     }
-  };
+  }, []);
 
-  const isRecentlyAdded = (): boolean => {
+  const isRecentlyAdded = useMemo((): boolean => {
     try {
       if (!car.updatedAt) return false;
 
@@ -96,14 +96,24 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
     } catch {
       return false;
     }
-  };
+  }, [car.updatedAt]);
 
-  const getFirstImageUrl = () => {
+  const firstImageUrl = useMemo(() => {
     if (!car.images || car.images.length === 0) return "/placeholder.svg";
     const firstImage = car.images[0];
     if (typeof firstImage === "string") return firstImage;
     return firstImage.url || firstImage.base64 || "/placeholder.svg";
-  };
+  }, [car.images]);
+
+  const handleToggleFavorite = useCallback(() => {
+    if (favoritesManager) {
+      favoritesManager.toggleLocalFavorite(car.id);
+    }
+  }, [favoritesManager, car.id]);
+
+  const isFavorite = useMemo(() => {
+    return favoritesManager?.isLocalFavorite(car.id) || false;
+  }, [favoritesManager, car.id]);
 
   return (
     <Card
@@ -135,12 +145,12 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
         })()} md:h-80 overflow-hidden bg-gray-100 xs:w-2/5 md:w-full`}
       >
         <OptimizedImage
-          src={getFirstImageUrl()}
+          src={firstImageUrl}
           alt={car.title}
           className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-300"
         />
 
-        {isRecentlyAdded() && (
+        {isRecentlyAdded && (
           <div className="absolute top-2 right-2 xs:top-1 xs:right-1 z-20">
             <Badge
               className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 font-bold text-[10px] xs:text-[8px] px-2 xs:px-1.5 py-0.5 xs:py-0.5 shadow-lg animate-pulse"
@@ -322,15 +332,15 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                 variant="outline"
                 size="sm"
                 className="text-xs xs:text-xs md:text-base h-6 xs:h-5 md:h-9 px-2 xs:px-2 md:px-3 py-0.5 md:py-2 flex-shrink-0"
-                onClick={() => favoritesManager.toggleLocalFavorite(car.id)}
+                onClick={handleToggleFavorite}
                 aria-label={
-                  favoritesManager.isLocalFavorite(car.id)
+                  isFavorite
                     ? "Remover dos favoritos"
                     : "Adicionar aos favoritos"
                 }
               >
                 <Heart
-                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${favoritesManager.isLocalFavorite(car.id)
+                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${isFavorite
                     ? "fill-red-500 text-red-500"
                     : "text-gray-600 hover:text-red-500"
                     }`}
