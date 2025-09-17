@@ -284,14 +284,14 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                           Repasse
                         </Badge>
                       )}
-                      {car.isSemiNovo && (
+                      {car.inPreparation && (
                         <Badge
                           className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
                         >
-                          Semi novo
+                          Em preparação
                         </Badge>
                       )}
                     </div>
@@ -310,7 +310,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
               size="sm"
               onClick={() => {
                 const externalLink = generateCarLink(car.title, car.id);
-                window.open(externalLink, "_blank");
+                window.location.href = externalLink;
               }}
             >
               <Eye className="h-3 w-3 xs:h-2.5 xs:w-2.5 md:h-4 md:w-4 mr-1 xs:mr-0.5" />
