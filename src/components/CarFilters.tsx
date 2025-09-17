@@ -189,9 +189,9 @@ const CarFilters = ({
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: -100, behavior: 'smooth' });
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: 'auto' });
+      window.scrollTo({ top: -100, behavior: 'auto' });
     }, 100);
   };
 
