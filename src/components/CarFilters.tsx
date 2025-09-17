@@ -8,7 +8,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import {
@@ -685,32 +684,79 @@ const CarFilters = ({
                   }}
                   className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
                 />
-                <label
-                  htmlFor="blindagem"
-                  className="text-base xs:text-xs md:text-sm font-medium cursor-pointer flex-1"
-                >
-                  Apenas Blindados
-                </label>
+
               </div>
             </div>
 
-            <div className="mt-6 xs:mt-3 md:mt-8 px-2 xs:px-1 md:px-0">
+            <div className="mt-6 xs:mt-3 md:mt-8">
               <label className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground mb-3 xs:mb-2 md:mb-4 block text-center xs:text-center md:text-left">
-                Faixa de Preço: R$ {filters.priceRange[0].toLocaleString()} - R${" "}
-                {filters.priceRange[1].toLocaleString()}
+                Faixa de Preço
               </label>
-              <div className="w-full max-w-sm xs:max-w-xs md:max-w-full mx-auto xs:mx-auto md:mx-0">
-                <Slider
-                  defaultValue={[0, 1000000]}
-                  value={filters.priceRange}
-                  onValueChange={(value) =>
-                    handleFilterChange("priceRange", value as [number, number])
-                  }
-                  max={1000000}
-                  min={0}
-                  step={5000}
-                  className="w-full"
-                />
+              <div className="grid grid-cols-2 gap-3 xs:gap-2 md:gap-4">
+                <div className="relative">
+                  <span className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground text-base xs:text-xs md:text-sm">
+                    R$
+                  </span>
+                  <Input
+                    type="text"
+                    placeholder="Valor mínimo"
+                    value={filters.priceMin}
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/\D/g, '');
+                      const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
+                      const numericValue = rawValue ? parseInt(rawValue) : 0;
+
+                      // Garante que o valor mínimo não seja maior que o máximo
+                      let maxValue = filters.priceRange[1];
+                      if (numericValue > maxValue && maxValue > 0) {
+                        maxValue = numericValue;
+                      }
+
+                      // Atualiza tanto o campo formatado quanto o priceRange
+                      const newFilters = {
+                        ...filters,
+                        priceMin: formattedValue,
+                        priceMax: maxValue !== filters.priceRange[1] ? maxValue.toLocaleString('pt-BR') : filters.priceMax,
+                        priceRange: [numericValue, maxValue] as [number, number]
+                      };
+                      setFilters(newFilters);
+                      onFilterChange(newFilters);
+                    }}
+                    className="pl-10 xs:pl-8 md:pl-12 pr-4 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm bg-input/50 border-border/50 focus:border-primary/50 rounded-lg transition-all duration-200"
+                  />
+                </div>
+                <div className="relative">
+                  <span className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground text-base xs:text-xs md:text-sm">
+                    R$
+                  </span>
+                  <Input
+                    type="text"
+                    placeholder="Valor máximo"
+                    value={filters.priceMax}
+                    onChange={(e) => {
+                      const rawValue = e.target.value.replace(/\D/g, '');
+                      const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
+                      const numericValue = rawValue ? parseInt(rawValue) : 1000000;
+
+                      // Garante que o valor máximo não seja menor que o mínimo
+                      let minValue = filters.priceRange[0];
+                      if (numericValue < minValue && rawValue !== '') {
+                        minValue = numericValue;
+                      }
+
+                      // Atualiza tanto o campo formatado quanto o priceRange
+                      const newFilters = {
+                        ...filters,
+                        priceMax: formattedValue,
+                        priceMin: minValue !== filters.priceRange[0] ? minValue.toLocaleString('pt-BR') : filters.priceMin,
+                        priceRange: [minValue, numericValue] as [number, number]
+                      };
+                      setFilters(newFilters);
+                      onFilterChange(newFilters);
+                    }}
+                    className="pl-10 xs:pl-8 md:pl-12 pr-4 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm bg-input/50 border-border/50 focus:border-primary/50 rounded-lg transition-all duration-200"
+                  />
+                </div>
               </div>
             </div>
 
