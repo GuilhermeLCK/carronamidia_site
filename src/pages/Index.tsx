@@ -48,6 +48,7 @@ const Index = () => {
           title: "Veículo removido!",
           description: "Veículo foi retirado dos seus favoritos.",
           className: "bg-gray-100 text-black border-gray-200",
+          duration: 1000,
         });
       } else {
         newFavorites.add(carId);
@@ -55,6 +56,7 @@ const Index = () => {
           title: "Veículo favoritado!",
           description: "O veículo foi adicionado aos seus favoritos.",
           className: "bg-gray-100 text-black border-gray-200",
+          duration: 1000,
         });
       }
       return newFavorites;

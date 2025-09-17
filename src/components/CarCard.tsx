@@ -143,7 +143,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
         {isRecentlyAdded() && (
           <div className="absolute top-2 right-2 xs:top-1 xs:right-1 z-20">
             <Badge
-              className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 font-bold text-xs px-3 py-1 shadow-lg animate-pulse"
+              className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 font-bold text-[10px] xs:text-[8px] px-2 xs:px-1.5 py-0.5 xs:py-0.5 shadow-lg animate-pulse"
               style={{
                 fontFamily: "'Inter', 'Roboto', sans-serif",
                 boxShadow: "0 0 20px rgba(239, 68, 68, 0.6)",
