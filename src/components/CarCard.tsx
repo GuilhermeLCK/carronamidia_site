@@ -332,10 +332,11 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                 }
               >
                 <Heart
-                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${favoritesManager.isLocalFavorite(car.id)
-                    ? "fill-red-500 text-red-500"
-                    : "text-gray-600 hover:text-red-500"
-                    }`}
+                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${
+                    favoritesManager.isLocalFavorite(car.id)
+                      ? "fill-red-500 text-red-500"
+                      : "text-gray-600 hover:text-red-500"
+                  }`}
                 />
               </Button>
             )}
