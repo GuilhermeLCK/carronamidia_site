@@ -81,6 +81,7 @@ const HeroSection = () => {
       ref={sectionRef}
       className="relative min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12"
       style={{ display: isHidden ? 'none' : 'flex' }}
+      id="hero-section"
     >
       <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
         <div className="relative aspect-video xs:aspect-[16/10] md:aspect-video overflow-hidden rounded-3xl xs:rounded-2xl md:rounded-[2rem] transition-all duration-700 transform hover:scale-[1.02] xs:pb-12 md:pb-0">

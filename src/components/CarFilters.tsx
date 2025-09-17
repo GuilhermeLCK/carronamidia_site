@@ -180,15 +180,7 @@ const CarFilters = ({
   };
 
   const scrollToTop = () => {
-    const carsGrid = document.querySelector('#cars-grid');
-    if (carsGrid) {
-      carsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setTimeout(() => {
-        carsGrid.scrollIntoView({ behavior: 'auto', block: 'start' });
-      }, 100);
-    } else {
-      window.scrollTo({ top: -100, behavior: 'smooth' });
-    }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
 
@@ -297,7 +289,7 @@ const CarFilters = ({
       ref={filtersRef}
       className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50 xs:py-2"
     >
-      <div className="max-w-7xl mx-auto relative">
+      <div className="max-w-7xl mx-auto relative" id="filters-container">
         <div className="text-center mb-4">
           <h1 className="text-2xl xs:text-lg md:text-3xl font-black text-foreground tracking-wide">
             CONFIRA NOSSO ESTOQUE
