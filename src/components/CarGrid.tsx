@@ -18,7 +18,11 @@ interface CarGridProps {
   onTotalCarsChange?: (total: number) => void;
 }
 
-const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps) => {
+const CarGrid = ({
+  filters,
+  favoritesManager,
+  onTotalCarsChange,
+}: CarGridProps) => {
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -43,6 +47,7 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
   }, []);
 
   const filteredAndSortedCars = useMemo(() => {
+    if (!cars || cars.length === 0) return [];
     let filtered = cars.filter((car) => car.active);
 
     if (filters.year) {
@@ -96,7 +101,6 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
       );
     }
 
-
     if (filters.showFavorites && favoritesManager) {
       filtered = favoritesManager.getLocalFavoritesCars(filtered);
     } else if (!filters.showAll) {
@@ -115,7 +119,9 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
             ? car.createdAt.toDate()
             : new Date(car.createdAt);
           const now = new Date();
-          const timeDifference = now.getTime() - createdDate.getTime();
+          const timeDifference = Math.abs(
+            now.getTime() - createdDate.getTime()
+          );
           const hoursDifference = timeDifference / (1000 * 3600);
           return hoursDifference <= 24;
         } catch {
@@ -125,32 +131,70 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
 
       const aIsNew = isRecentlyAdded(a);
       const bIsNew = isRecentlyAdded(b);
+      const aHasUpdated = !!a.updatedAt;
+      const bHasUpdated = !!b.updatedAt;
 
-      if (aIsNew && !bIsNew) return -1;
-      if (!aIsNew && bIsNew) return 1;
+      if (aHasUpdated && !bHasUpdated) {
+        return -1;
+      }
+      if (!aHasUpdated && bHasUpdated) {
+        return 1;
+      }
 
+      if (aHasUpdated && bHasUpdated) {
+        try {
+          const aUpdatedDate = a.updatedAt.toDate
+            ? a.updatedAt.toDate()
+            : new Date(a.updatedAt);
+          const bUpdatedDate = b.updatedAt.toDate
+            ? b.updatedAt.toDate()
+            : new Date(b.updatedAt);
+
+          return bUpdatedDate.getTime() - aUpdatedDate.getTime();
+        } catch {
+          return 0;
+        }
+      }
+
+      if (aIsNew && !bIsNew) {
+        return -1;
+      }
+      if (!aIsNew && bIsNew) {
+        return 1;
+      }
       if (aIsNew && bIsNew && a.createdAt && b.createdAt) {
-        const aDate = a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
-        const bDate = b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        const aDate = a.createdAt.toDate
+          ? a.createdAt.toDate()
+          : new Date(a.createdAt);
+        const bDate = b.createdAt.toDate
+          ? b.createdAt.toDate()
+          : new Date(b.createdAt);
         return bDate.getTime() - aDate.getTime();
       }
 
       if (a.createdAt && b.createdAt) {
-        const aDate = a.createdAt.toDate ? a.createdAt.toDate() : new Date(a.createdAt);
-        const bDate = b.createdAt.toDate ? b.createdAt.toDate() : new Date(b.createdAt);
+        const aDate = a.createdAt.toDate
+          ? a.createdAt.toDate()
+          : new Date(a.createdAt);
+        const bDate = b.createdAt.toDate
+          ? b.createdAt.toDate()
+          : new Date(b.createdAt);
         return bDate.getTime() - aDate.getTime();
       }
 
       return 0;
     });
 
-    // Notificar o total de carros filtrados
-    if (onTotalCarsChange) {
-      onTotalCarsChange(sorted.length);
-    }
-
     return sorted;
   }, [cars, filters, onTotalCarsChange, favoritesManager]);
+
+
+  useEffect(() => {
+    if (onTotalCarsChange) {
+      onTotalCarsChange(filteredAndSortedCars.length);
+    }
+  }, [filteredAndSortedCars.length, onTotalCarsChange]);
+
 
   if (loading) {
     return (
@@ -212,10 +256,12 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
         </Alert>
       )}
 
-
       {filteredAndSortedCars.length > 0 && (
         <div>
-          <VirtualizedCarGrid cars={filteredAndSortedCars} favoritesManager={favoritesManager} />
+          <VirtualizedCarGrid
+            cars={filteredAndSortedCars}
+            favoritesManager={favoritesManager}
+          />
         </div>
       )}
       {filteredAndSortedCars.length === 0 && (
@@ -239,7 +285,10 @@ interface VirtualizedCarGridProps {
   };
 }
 
-const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps) => {
+const VirtualizedCarGrid = ({
+  cars,
+  favoritesManager,
+}: VirtualizedCarGridProps) => {
   const [visibleCars, setVisibleCars] = useState<Car[]>([]);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -248,13 +297,11 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
   const itemsPerPage = 12;
   const totalPages = Math.ceil(cars.length / itemsPerPage);
 
-
   useEffect(() => {
     const initialItems = cars.slice(0, itemsPerPage);
     setVisibleCars(initialItems);
     setPage(1);
   }, [cars]);
-
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -277,7 +324,6 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
     if (page >= totalPages || isLoadingMore) return;
 
     setIsLoadingMore(true);
-
 
     await new Promise((resolve) => setTimeout(resolve, 300));
 
@@ -305,7 +351,6 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
         ))}
       </div>
 
-
       {isLoadingMore && (
         <div className="flex justify-center mt-8">
           <div className="grid grid-cols-1 xs:grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 xs:gap-2 xs:px-1 w-full">
@@ -315,7 +360,6 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
           </div>
         </div>
       )}
-
 
       {page < totalPages && (
         <div
@@ -335,7 +379,6 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
           )}
         </div>
       )}
-
 
       {page >= totalPages && visibleCars.length > 0 && (
         <div className="text-center mt-8 py-4">
