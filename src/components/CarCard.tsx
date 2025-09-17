@@ -190,7 +190,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                     <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 min-h-4">
                       {car.isShielding && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -200,7 +200,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isZeroKm && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -210,7 +210,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isConsignment && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -220,7 +220,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.inPreparation && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -230,7 +230,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -245,7 +245,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                     <div className="flex flex-wrap gap-0.5 xs:gap-0.5 md:gap-1 mb-2 xs:mb-1 md:mb-3 min-h-4 max-w-full">
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -256,7 +256,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
 
                       {car.isShielding && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -266,7 +266,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isZeroKm && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -276,7 +276,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isConsignment && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -286,7 +286,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap touch-manipulation select-none pointer-events-none"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
