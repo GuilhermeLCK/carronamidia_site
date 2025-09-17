@@ -119,7 +119,7 @@ const CarFilters = ({
 
     setFilters(newFilters);
     onFilterChange(newFilters);
-    
+
     // Scroll para o topo da listagem
     scrollToTop();
   };
@@ -135,7 +135,7 @@ const CarFilters = ({
     };
     setFilters(newFilters);
     onFilterChange(newFilters);
-    
+
     // Scroll para o topo da listagem
     scrollToTop();
   };
@@ -190,9 +190,11 @@ const CarFilters = ({
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }, 100);
   };
 
-  // Função para atualizar preços com debounce
   const updatePricesWithDebounce = (minValue: string, maxValue: string) => {
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
