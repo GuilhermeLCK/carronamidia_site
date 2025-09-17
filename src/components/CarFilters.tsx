@@ -180,9 +180,9 @@ const CarFilters = ({
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: -100, behavior: 'smooth' });
+    window.scrollTo({ top: -200, behavior: 'smooth' });
     setTimeout(() => {
-      window.scrollTo({ top: -100, behavior: 'auto' });
+      window.scrollTo({ top: -200, behavior: 'auto' });
     }, 100);
   };
 
@@ -306,7 +306,6 @@ const CarFilters = ({
                 value={filters.searchTerm}
                 onChange={(e) => {
                   handleFilterChange("searchTerm", e.target.value);
-                  // Scroll para o topo quando pesquisar
                   if (e.target.value.trim() !== '') {
                     scrollToTop();
                   }
@@ -666,13 +665,13 @@ const CarFilters = ({
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
                       const numericValue = rawValue ? parseInt(rawValue) : 0;
-                      
+
                       const newFilters = {
                         ...filters,
                         priceMin: formattedValue,
                         priceRange: [numericValue, filters.priceRange[1]] as [number, number]
                       };
-                      
+
                       setFilters(newFilters);
                       onFilterChange(newFilters);
                     }}
@@ -691,13 +690,13 @@ const CarFilters = ({
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
                       const numericValue = rawValue ? parseInt(rawValue) : 1000000;
-                      
+
                       const newFilters = {
                         ...filters,
                         priceMax: formattedValue,
                         priceRange: [filters.priceRange[0], numericValue] as [number, number]
                       };
-                      
+
                       setFilters(newFilters);
                       onFilterChange(newFilters);
                     }}
