@@ -247,7 +247,7 @@ const CarFilters = ({
 
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (!isExpanded) return;
 
       const target = event.target as HTMLElement;
@@ -269,10 +269,12 @@ const CarFilters = ({
 
     if (isExpanded) {
       document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
     };
   }, [isExpanded]);
 
