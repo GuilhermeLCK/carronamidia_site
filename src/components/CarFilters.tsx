@@ -323,7 +323,7 @@ const CarFilters = ({
     <div
       id="filters"
       ref={filtersRef}
-      className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50"
+      className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50 xs:py-2"
     >
       <div className="max-w-7xl mx-auto relative">
         <div className="text-center mb-4">
@@ -426,7 +426,6 @@ const CarFilters = ({
 
               <div className="md:hidden mb-2">
                 <div className="space-y-2">
-                  {/* Estoque Completo sozinho na primeira linha */}
                   <div className="w-full">
                     <Button
                       variant={filters.showAll ? "default" : "outline"}
