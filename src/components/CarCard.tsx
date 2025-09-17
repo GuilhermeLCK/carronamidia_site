@@ -22,7 +22,6 @@ export interface Car {
   link?: string;
   images: ProcessedImage[];
   active: boolean;
-  createdAt: any;
   updatedAt: any;
   year?: number;
   km?: number;
@@ -85,16 +84,14 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
 
   const isRecentlyAdded = (): boolean => {
     try {
-      if (!car.createdAt) return false;
+      if (!car.updatedAt) return false;
 
-      const createdDate = car.createdAt.toDate
-        ? car.createdAt.toDate()
-        : new Date(car.createdAt);
-
+      const updatedDate = car.updatedAt.toDate
+        ? car.updatedAt.toDate()
+        : new Date(car.updatedAt);
       const now = new Date();
-      const timeDifference = Math.abs(now.getTime() - createdDate.getTime());
+      const timeDifference = Math.abs(now.getTime() - updatedDate.getTime());
       const hoursDifference = timeDifference / (1000 * 3600);
-
       return hoursDifference <= 24;
     } catch {
       return false;
@@ -193,7 +190,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                     <div className="flex flex-wrap gap-1 xs:gap-0.5 md:gap-2 min-h-4">
                       {car.isShielding && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -203,7 +200,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isZeroKm && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -213,7 +210,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isConsignment && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -223,7 +220,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.inPreparation && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -233,7 +230,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -248,7 +245,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                     <div className="flex flex-wrap gap-0.5 xs:gap-0.5 md:gap-1 mb-2 xs:mb-1 md:mb-3 min-h-4 max-w-full">
                       {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 hover:shadow-md transition-shadow"
+                          className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -259,7 +256,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
 
                       {car.isShielding && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -269,7 +266,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isZeroKm && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -279,7 +276,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                       )}
                       {car.isConsignment && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
@@ -287,14 +284,14 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                           Repasse
                         </Badge>
                       )}
-                      {car.inPreparation && (
+                      {car.isSemiNovo && (
                         <Badge
-                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 hover:shadow-md transition-shadow whitespace-nowrap"
+                          className="bg-gray-100 text-black text-xs xs:text-xs xs:px-1 xs:py-0.5 px-1.5 py-0.5 md:px-1.5 md:py-0.5 font-medium shadow-sm border-0 whitespace-nowrap"
                           style={{
                             fontFamily: "'Inter', 'Roboto', sans-serif",
                           }}
                         >
-                          Em Preparação
+                          Semi novo
                         </Badge>
                       )}
                     </div>
@@ -333,11 +330,10 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                 }
               >
                 <Heart
-                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${
-                    favoritesManager.isLocalFavorite(car.id)
-                      ? "fill-red-500 text-red-500"
-                      : "text-gray-600 hover:text-red-500"
-                  }`}
+                  className={`h-3 w-3 xs:h-5 xs:w-5 md:h-4 md:w-4 transition-colors ${favoritesManager.isLocalFavorite(car.id)
+                    ? "fill-red-500 text-red-500"
+                    : "text-gray-600 hover:text-red-500"
+                    }`}
                 />
               </Button>
             )}

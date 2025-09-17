@@ -79,9 +79,7 @@ const CarFilters = ({
     showFavorites: false,
   });
 
-  const [tempPriceMin, setTempPriceMin] = useState("");
-  const [tempPriceMax, setTempPriceMax] = useState("");
-  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
 
   const handleFilterChange = (
     key: keyof CarFilters,
@@ -159,14 +157,7 @@ const CarFilters = ({
       showFavorites: false,
     };
 
-    // Limpa também os estados temporários
-    setTempPriceMin("");
-    setTempPriceMax("");
 
-    // Limpa o timeout pendente
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
 
     setFilters(emptyFilters);
     onFilterChange(emptyFilters);
@@ -195,34 +186,7 @@ const CarFilters = ({
     }, 100);
   };
 
-  const updatePricesWithDebounce = (minValue: string, maxValue: string) => {
-    if (debounceTimeoutRef.current) {
-      clearTimeout(debounceTimeoutRef.current);
-    }
 
-    debounceTimeoutRef.current = setTimeout(() => {
-      const minNumeric = minValue ? parseInt(minValue.replace(/\D/g, '')) : 0;
-      const maxNumeric = maxValue ? parseInt(maxValue.replace(/\D/g, '')) : 1000000;
-
-      // Validação: não permite mínimo maior que máximo
-      let finalMin = minNumeric;
-      let finalMax = maxNumeric;
-
-      if (minNumeric > maxNumeric && maxValue !== '') {
-        finalMin = maxNumeric;
-      }
-
-      const newFilters = {
-        ...filters,
-        priceMin: finalMin > 0 ? finalMin.toLocaleString('pt-BR') : '',
-        priceMax: finalMax < 1000000 ? finalMax.toLocaleString('pt-BR') : '',
-        priceRange: [finalMin, finalMax] as [number, number]
-      };
-
-      setFilters(newFilters);
-      onFilterChange(newFilters);
-    }, 800); // 800ms de delay
-  };
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent) => {
@@ -314,14 +278,7 @@ const CarFilters = ({
 
 
 
-  // Cleanup do timeout quando o componente for desmontado
-  useEffect(() => {
-    return () => {
-      if (debounceTimeoutRef.current) {
-        clearTimeout(debounceTimeoutRef.current);
-      }
-    };
-  }, []);
+
 
   const years = Array.from({ length: 15 }, (_, i) =>
     (new Date().getFullYear() - i).toString()
@@ -347,9 +304,13 @@ const CarFilters = ({
                 type="text"
                 placeholder="Buscar por modelo, marca..."
                 value={filters.searchTerm}
-                onChange={(e) =>
-                  handleFilterChange("searchTerm", e.target.value)
-                }
+                onChange={(e) => {
+                  handleFilterChange("searchTerm", e.target.value);
+                  // Scroll para o topo quando pesquisar
+                  if (e.target.value.trim() !== '') {
+                    scrollToTop();
+                  }
+                }}
                 className="pl-10 xs:pl-8 md:pl-12 pr-4 h-12 xs:h-8 md:h-14 text-base xs:text-xs md:text-lg bg-input/50 border-border/50 focus:border-primary/50 rounded-xl transition-all duration-200"
               />
             </div>
@@ -634,10 +595,22 @@ const CarFilters = ({
                     Picape Intermediaria
                   </SelectItem>
                   <SelectItem
+                    value="Utilitarios"
+                    className="text-base xs:text-xs md:text-sm"
+                  >
+                    Utilitarios
+                  </SelectItem>
+                  <SelectItem
                     value="Sedan Popular"
                     className="text-base xs:text-xs md:text-sm"
                   >
                     Sedan Popular
+                  </SelectItem>
+                  <SelectItem
+                    value="Sedan Medio"
+                    className="text-base xs:text-xs md:text-sm"
+                  >
+                    Sedan Medio
                   </SelectItem>
                   <SelectItem
                     value="Hatch Popular"
@@ -650,18 +623,6 @@ const CarFilters = ({
                     className="text-base xs:text-xs md:text-sm"
                   >
                     Hatch Premium
-                  </SelectItem>
-                  <SelectItem
-                    value="Utilitarios"
-                    className="text-base xs:text-xs md:text-sm"
-                  >
-                    Utilitarios
-                  </SelectItem>
-                  <SelectItem
-                    value="Sedan Medio"
-                    className="text-base xs:text-xs md:text-sm"
-                  >
-                    Sedan Medio
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -700,13 +661,20 @@ const CarFilters = ({
                   <Input
                     type="text"
                     placeholder="Valor mínimo"
-                    value={tempPriceMin || filters.priceMin}
+                    value={filters.priceMin}
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
-
-                      setTempPriceMin(formattedValue);
-                      updatePricesWithDebounce(formattedValue, tempPriceMax || filters.priceMax);
+                      const numericValue = rawValue ? parseInt(rawValue) : 0;
+                      
+                      const newFilters = {
+                        ...filters,
+                        priceMin: formattedValue,
+                        priceRange: [numericValue, filters.priceRange[1]] as [number, number]
+                      };
+                      
+                      setFilters(newFilters);
+                      onFilterChange(newFilters);
                     }}
                     className="pl-10 xs:pl-8 md:pl-12 pr-4 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm bg-input/50 border-border/50 focus:border-primary/50 rounded-lg transition-all duration-200"
                   />
@@ -718,13 +686,20 @@ const CarFilters = ({
                   <Input
                     type="text"
                     placeholder="Valor máximo"
-                    value={tempPriceMax || filters.priceMax}
+                    value={filters.priceMax}
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
-
-                      setTempPriceMax(formattedValue);
-                      updatePricesWithDebounce(tempPriceMin || filters.priceMin, formattedValue);
+                      const numericValue = rawValue ? parseInt(rawValue) : 1000000;
+                      
+                      const newFilters = {
+                        ...filters,
+                        priceMax: formattedValue,
+                        priceRange: [filters.priceRange[0], numericValue] as [number, number]
+                      };
+                      
+                      setFilters(newFilters);
+                      onFilterChange(newFilters);
                     }}
                     className="pl-10 xs:pl-8 md:pl-12 pr-4 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm bg-input/50 border-border/50 focus:border-primary/50 rounded-lg transition-all duration-200"
                   />

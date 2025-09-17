@@ -36,7 +36,7 @@ export interface FirebaseCar {
   link?: string;
   images: ProcessedImage[] | string[];
   active: boolean;
-  createdAt: any;
+  updatedAt: any;
   category?: string;
   codeVehicle?: string;
   color?: string;
@@ -66,8 +66,8 @@ const convertFirebaseCarToCar = (firebaseCar: FirebaseCar): Car => {
       ? typeof firebaseCar.images[0] === "string"
         ? firebaseCar.images[0]
         : (firebaseCar.images[0] as ProcessedImage).url ||
-          (firebaseCar.images[0] as ProcessedImage).base64 ||
-          ""
+        (firebaseCar.images[0] as ProcessedImage).base64 ||
+        ""
       : "";
 
   return {
@@ -81,7 +81,7 @@ const convertFirebaseCarToCar = (firebaseCar: FirebaseCar): Car => {
     images: [{ url: firstImage, originalName: "", size: 0, type: "" }],
     mileage: parseInt(firebaseCar.km || "0") || 0,
     active: firebaseCar.active,
-    createdAt: firebaseCar.createdAt,
+    updatedAt: firebaseCar.updatedAt,
     year: parseInt(firebaseCar.year || "") || undefined,
     km: parseInt(firebaseCar.km || "0") || 0,
     inPreparation: firebaseCar.inPreparation || false,
@@ -113,13 +113,13 @@ export const getAllCars = async (): Promise<Car[]> => {
       }
     });
     cars.sort((a, b) => {
-      if (a.createdAt && b.createdAt) {
-        const dateA = a.createdAt.toDate
-          ? a.createdAt.toDate()
-          : new Date(a.createdAt);
-        const dateB = b.createdAt.toDate
-          ? b.createdAt.toDate()
-          : new Date(b.createdAt);
+      if (a.updatedAt && b.updatedAt) {
+        const dateA = a.updatedAt.toDate
+          ? a.updatedAt.toDate()
+          : new Date(a.updatedAt);
+        const dateB = b.updatedAt.toDate
+          ? b.updatedAt.toDate()
+          : new Date(b.updatedAt);
         return dateB.getTime() - dateA.getTime();
       }
       return 0;

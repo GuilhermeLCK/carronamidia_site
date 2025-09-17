@@ -112,77 +112,34 @@ const CarGrid = ({
       });
     }
     const sorted = filtered.sort((a, b) => {
-      const isRecentlyAdded = (car: any): boolean => {
-        try {
-          if (!car.createdAt) return false;
-          const createdDate = car.createdAt.toDate
-            ? car.createdAt.toDate()
-            : new Date(car.createdAt);
-          const now = new Date();
-          const timeDifference = Math.abs(
-            now.getTime() - createdDate.getTime()
-          );
-          const hoursDifference = timeDifference / (1000 * 3600);
-          return hoursDifference <= 24;
-        } catch {
-          return false;
+      try {
+        const aHasUpdated = !!a.updatedAt;
+        const bHasUpdated = !!b.updatedAt;
+
+        if (aHasUpdated && !bHasUpdated) {
+          return -1;
         }
-      };
-
-      const aIsNew = isRecentlyAdded(a);
-      const bIsNew = isRecentlyAdded(b);
-      const aHasUpdated = !!a.updatedAt;
-      const bHasUpdated = !!b.updatedAt;
-
-      if (aHasUpdated && !bHasUpdated) {
-        return -1;
-      }
-      if (!aHasUpdated && bHasUpdated) {
-        return 1;
-      }
-
-      if (aHasUpdated && bHasUpdated) {
-        try {
-          const aUpdatedDate = a.updatedAt.toDate
-            ? a.updatedAt.toDate()
-            : new Date(a.updatedAt);
-          const bUpdatedDate = b.updatedAt.toDate
-            ? b.updatedAt.toDate()
-            : new Date(b.updatedAt);
-
-          return bUpdatedDate.getTime() - aUpdatedDate.getTime();
-        } catch {
-          return 0;
+        if (!aHasUpdated && bHasUpdated) {
+          return 1;
         }
-      }
 
-      if (aIsNew && !bIsNew) {
-        return -1;
-      }
-      if (!aIsNew && bIsNew) {
-        return 1;
-      }
-      if (aIsNew && bIsNew && a.createdAt && b.createdAt) {
-        const aDate = a.createdAt.toDate
-          ? a.createdAt.toDate()
-          : new Date(a.createdAt);
-        const bDate = b.createdAt.toDate
-          ? b.createdAt.toDate()
-          : new Date(b.createdAt);
-        return bDate.getTime() - aDate.getTime();
-      }
+        if (aHasUpdated && bHasUpdated) {
+          const aDate = a.updatedAt.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt);
+          const bDate = b.updatedAt.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt);
+          return bDate.getTime() - aDate.getTime();
+        }
 
-      if (a.createdAt && b.createdAt) {
-        const aDate = a.createdAt.toDate
-          ? a.createdAt.toDate()
-          : new Date(a.createdAt);
-        const bDate = b.createdAt.toDate
-          ? b.createdAt.toDate()
-          : new Date(b.createdAt);
-        return bDate.getTime() - aDate.getTime();
-      }
+        if (a.updatedAt && b.updatedAt) {
+          const aDate = a.updatedAt.toDate ? a.updatedAt.toDate() : new Date(a.updatedAt);
+          const bDate = b.updatedAt.toDate ? b.updatedAt.toDate() : new Date(b.updatedAt);
+          return bDate.getTime() - aDate.getTime();
+        }
 
-      return 0;
+        return 0;
+      } catch (error) {
+        console.error('Error in sorting:', error);
+        return 0;
+      }
     });
 
     return sorted;
