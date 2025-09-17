@@ -150,7 +150,7 @@ const CarGrid = ({ filters, favoritesManager, onTotalCarsChange }: CarGridProps)
     }
 
     return sorted;
-  }, [cars, filters, onTotalCarsChange]);
+  }, [cars, filters, onTotalCarsChange, favoritesManager]);
 
   if (loading) {
     return (
@@ -340,7 +340,7 @@ const VirtualizedCarGrid = ({ cars, favoritesManager }: VirtualizedCarGridProps)
       {page >= totalPages && visibleCars.length > 0 && (
         <div className="text-center mt-8 py-4">
           <p className="text-gray-500 text-sm">
-            ✨ Você viu todos os {cars.length} veículos disponíveis
+            Você viu todos os {cars.length} veículos disponíveis
           </p>
         </div>
       )}

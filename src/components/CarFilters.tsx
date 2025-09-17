@@ -484,12 +484,12 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
             ref={expandedContentRef}
             className="transform transition-all duration-300 ease-out"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 xs:gap-2 md:gap-5 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 xs:gap-2 md:gap-3 mb-6">
               <Select
                 value={filters.year}
                 onValueChange={(value) => handleFilterChange("year", value)}
               >
-                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-lg">
+                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm">
                   <SelectValue placeholder="Ano" />
                 </SelectTrigger>
                 <SelectContent>
@@ -497,7 +497,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
                     <SelectItem
                       key={year}
                       value={year}
-                      className="text-base xs:text-xs md:text-lg"
+                      className="text-base xs:text-xs md:text-sm"
                     >
                       {year}
                     </SelectItem>
@@ -509,43 +509,43 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
                 value={filters.fuelType}
                 onValueChange={(value) => handleFilterChange("fuelType", value)}
               >
-                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-lg">
+                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm">
                   <SelectValue placeholder="Combustível" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
                     value="Diesel"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Diesel
                   </SelectItem>
                   <SelectItem
                     value="Flex"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Flex
                   </SelectItem>
                   <SelectItem
                     value="Gasolina"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Gasolina
                   </SelectItem>
                   <SelectItem
                     value="Híbrido"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Híbrido
                   </SelectItem>
                   <SelectItem
                     value="Híbrido Plug-in"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Híbrido Plug-in
                   </SelectItem>
                   <SelectItem
                     value="Elétrico"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Elétrico
                   </SelectItem>
@@ -558,19 +558,19 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
                   handleFilterChange("transmission", value)
                 }
               >
-                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-lg">
+                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm">
                   <SelectValue placeholder="Câmbio" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
                     value="Aut"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Automático
                   </SelectItem>
                   <SelectItem
                     value="Mec"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Manual
                   </SelectItem>
@@ -581,67 +581,67 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
                 value={filters.category}
                 onValueChange={(value) => handleFilterChange("category", value)}
               >
-                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-lg">
+                <SelectTrigger className="bg-input/50 border-border/50 focus:border-primary/50 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm">
                   <SelectValue placeholder="Categoria" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem
                     value="SUV de Grande Porte"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     SUV de Grande Porte
                   </SelectItem>
                   <SelectItem
                     value="SUV de Médio Porte"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     SUV de Médio Porte
                   </SelectItem>
                   <SelectItem
                     value="SUV Compacto"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     SUV Compacto
                   </SelectItem>
                   <SelectItem
                     value="Picape Media"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Picape Media
                   </SelectItem>
                   <SelectItem
                     value="Picape Intermediaria"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Picape Intermediaria
                   </SelectItem>
                   <SelectItem
                     value="Sedan Popular"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Sedan Popular
                   </SelectItem>
                   <SelectItem
                     value="Hatch Popular"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Hatch Popular
                   </SelectItem>
                   <SelectItem
                     value="Hatch Premium"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Hatch Premium
                   </SelectItem>
                   <SelectItem
                     value="Utilitarios"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Utilitarios
                   </SelectItem>
                   <SelectItem
                     value="Sedan Medio"
-                    className="text-base xs:text-xs md:text-lg"
+                    className="text-base xs:text-xs md:text-sm"
                   >
                     Sedan Medio
                   </SelectItem>
@@ -659,7 +659,7 @@ const CarFilters = ({ onFilterChange, onFavoritesChange, totalCars = 0 }: Filter
                 />
                 <label
                   htmlFor="blindagem"
-                  className="text-base xs:text-xs md:text-lg font-medium cursor-pointer flex-1"
+                  className="text-base xs:text-xs md:text-sm font-medium cursor-pointer flex-1"
                 >
                   Apenas Blindados
                 </label>
