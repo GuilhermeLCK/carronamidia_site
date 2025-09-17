@@ -238,7 +238,7 @@ const CarGrid = ({
   }
 
   return (
-    <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-0 md:py-12">
+    <div id="cars-grid" className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-0 md:py-12">
       {error && cars.length > 0 && (
         <Alert className="mb-6 border-orange-200 bg-orange-50">
           <AlertCircle className="h-4 w-4 text-orange-600" />

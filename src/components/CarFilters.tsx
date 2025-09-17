@@ -81,6 +81,10 @@ const CarFilters = ({
     showFavorites: false,
   });
 
+  const [tempPriceMin, setTempPriceMin] = useState("");
+  const [tempPriceMax, setTempPriceMax] = useState("");
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleFilterChange = (
     key: keyof CarFilters,
     value: string | boolean | [number, number]
@@ -150,6 +154,16 @@ const CarFilters = ({
       showAll: true,
       showFavorites: false,
     };
+    
+    // Limpa também os estados temporários
+    setTempPriceMin("");
+    setTempPriceMax("");
+    
+    // Limpa o timeout pendente
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+    
     setFilters(emptyFilters);
     onFilterChange(emptyFilters);
   };
@@ -163,8 +177,50 @@ const CarFilters = ({
       filters.isShielding === true ||
       filters.priceRange[0] > 0 ||
       filters.priceRange[1] < 1000000 ||
-      filters.searchTerm !== ""
+      filters.searchTerm !== "" ||
+      filters.priceMin !== "" ||
+      filters.priceMax !== "" ||
+      !filters.showAll
     );
+  };
+
+  const scrollToTop = () => {
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      window.scrollTo({ top: 500, behavior: 'smooth' });
+    }
+  };
+
+  // Função para atualizar preços com debounce
+  const updatePricesWithDebounce = (minValue: string, maxValue: string) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    debounceTimeoutRef.current = setTimeout(() => {
+      const minNumeric = minValue ? parseInt(minValue.replace(/\D/g, '')) : 0;
+      const maxNumeric = maxValue ? parseInt(maxValue.replace(/\D/g, '')) : 1000000;
+      
+      // Validação: não permite mínimo maior que máximo
+      let finalMin = minNumeric;
+      let finalMax = maxNumeric;
+      
+      if (minNumeric > maxNumeric && maxValue !== '') {
+        finalMin = maxNumeric;
+      }
+      
+      const newFilters = {
+        ...filters,
+        priceMin: finalMin > 0 ? finalMin.toLocaleString('pt-BR') : '',
+        priceMax: finalMax < 1000000 ? finalMax.toLocaleString('pt-BR') : '',
+        priceRange: [finalMin, finalMax] as [number, number]
+      };
+      
+      setFilters(newFilters);
+      onFilterChange(newFilters);
+    }, 800); // 800ms de delay
   };
 
   const handleTouchStart = useCallback(
@@ -234,8 +290,47 @@ const CarFilters = ({
   }, []);
 
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!isExpanded) return;
+
+      const target = event.target as HTMLElement;
+      if (
+        target.closest(
+          'button, select, input, label, [role="combobox"], [role="option"], [data-radix-collection-item], [data-state], [data-radix-select-trigger], [data-radix-select-content], [data-radix-select-item], [data-radix-select-viewport], .radix-select, .select-trigger, .select-content, [data-radix-slider-root], [data-radix-slider-track], [data-radix-slider-range], [data-radix-slider-thumb], [data-radix-checkbox-root], [data-radix-checkbox-indicator]'
+        )
+      ) {
+        return;
+      }
+      if (filtersRef.current && !filtersRef.current.contains(target)) {
+        const hasFilters = hasActiveFilters();
+        setIsExpanded(false);
+        if (hasFilters) {
+          scrollToTop();
+        }
+      }
+    };
+
+    if (isExpanded) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isExpanded]);
+
+  useEffect(() => {
     setIsStockOptionsExpanded(false);
   }, [isScrolled]);
+
+  // Cleanup do timeout quando o componente for desmontado
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const years = Array.from({ length: 15 }, (_, i) =>
     (new Date().getFullYear() - i).toString()
@@ -248,7 +343,6 @@ const CarFilters = ({
       className="sticky top-0 z-50 py-5 px-4 bg-background border-b border-border/50"
     >
       <div className="max-w-7xl mx-auto relative">
-        {/* Título principal fixo */}
         <div className="text-center mb-4">
           <h1 className="text-2xl xs:text-lg md:text-3xl font-black text-foreground tracking-wide">
             CONFIRA NOSSO ESTOQUE
@@ -256,7 +350,6 @@ const CarFilters = ({
         </div>
         <div className="mb-2 md:mb-4">
           <div className="flex items-center gap-3 xs:gap-2">
-            {/* Input de busca */}
             <div className="relative flex-1">
               <Search className="absolute left-3 xs:left-2 md:left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 xs:h-3 xs:w-3 md:h-6 md:w-6 text-muted-foreground" />
               <Input
@@ -669,7 +762,7 @@ const CarFilters = ({
               <div className="flex items-center justify-between p-3 bg-input/50 border border-border/50 rounded-lg h-11 xs:h-8 md:h-12">
                 <label
                   htmlFor="blindagem"
-                  className="text-base xs:text-xs md:text-lg cursor-pointer flex-1"
+                  className="text-base xs:text-xs md:text-sm"
                 >
                   Apenas Blindados
                 </label>
@@ -700,27 +793,13 @@ const CarFilters = ({
                   <Input
                     type="text"
                     placeholder="Valor mínimo"
-                    value={filters.priceMin}
+                    value={tempPriceMin || filters.priceMin}
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
-                      const numericValue = rawValue ? parseInt(rawValue) : 0;
-
-                      // Garante que o valor mínimo não seja maior que o máximo
-                      let maxValue = filters.priceRange[1];
-                      if (numericValue > maxValue && maxValue > 0) {
-                        maxValue = numericValue;
-                      }
-
-                      // Atualiza tanto o campo formatado quanto o priceRange
-                      const newFilters = {
-                        ...filters,
-                        priceMin: formattedValue,
-                        priceMax: maxValue !== filters.priceRange[1] ? maxValue.toLocaleString('pt-BR') : filters.priceMax,
-                        priceRange: [numericValue, maxValue] as [number, number]
-                      };
-                      setFilters(newFilters);
-                      onFilterChange(newFilters);
+                      
+                      setTempPriceMin(formattedValue);
+                      updatePricesWithDebounce(formattedValue, tempPriceMax || filters.priceMax);
                     }}
                     className="pl-10 xs:pl-8 md:pl-12 pr-4 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm bg-input/50 border-border/50 focus:border-primary/50 rounded-lg transition-all duration-200"
                   />
@@ -732,27 +811,13 @@ const CarFilters = ({
                   <Input
                     type="text"
                     placeholder="Valor máximo"
-                    value={filters.priceMax}
+                    value={tempPriceMax || filters.priceMax}
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
-                      const numericValue = rawValue ? parseInt(rawValue) : 1000000;
-
-                      // Garante que o valor máximo não seja menor que o mínimo
-                      let minValue = filters.priceRange[0];
-                      if (numericValue < minValue && rawValue !== '') {
-                        minValue = numericValue;
-                      }
-
-                      // Atualiza tanto o campo formatado quanto o priceRange
-                      const newFilters = {
-                        ...filters,
-                        priceMax: formattedValue,
-                        priceMin: minValue !== filters.priceRange[0] ? minValue.toLocaleString('pt-BR') : filters.priceMin,
-                        priceRange: [minValue, numericValue] as [number, number]
-                      };
-                      setFilters(newFilters);
-                      onFilterChange(newFilters);
+                      
+                      setTempPriceMax(formattedValue);
+                      updatePricesWithDebounce(tempPriceMin || filters.priceMin, formattedValue);
                     }}
                     className="pl-10 xs:pl-8 md:pl-12 pr-4 h-11 xs:h-8 md:h-12 text-base xs:text-xs md:text-sm bg-input/50 border-border/50 focus:border-primary/50 rounded-lg transition-all duration-200"
                   />
@@ -762,7 +827,13 @@ const CarFilters = ({
 
             <div className="relative flex justify-center mt-6 xs:mt-3 md:mt-8">
               <button
-                onClick={() => setIsExpanded(false)}
+                onClick={() => {
+                  const hasFilters = hasActiveFilters();
+                  setIsExpanded(false);
+                  if (hasFilters) {
+                    scrollToTop();
+                  }
+                }}
                 className="group flex flex-col items-center gap-0.5 xs:gap-0.5 md:gap-1 py-1 xs:py-0.5 px-2 xs:px-1.5 md:py-2 md:px-4 rounded-t-lg bg-muted/30 hover:bg-muted/50 transition-all duration-300 border-t border-l border-r border-border/30"
               >
                 <div className="w-5 xs:w-4 md:w-8 h-0.5 xs:h-0.5 md:h-1 bg-muted-foreground/40 rounded-full group-hover:bg-muted-foreground/60 transition-colors"></div>
