@@ -55,8 +55,6 @@ const CarFilters = ({
   totalCars = 0,
 }: FilterProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isStockOptionsExpanded, setIsStockOptionsExpanded] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
   const [startY, setStartY] = useState(0);
   const [currentY, setCurrentY] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
@@ -154,16 +152,16 @@ const CarFilters = ({
       showAll: true,
       showFavorites: false,
     };
-    
+
     // Limpa também os estados temporários
     setTempPriceMin("");
     setTempPriceMax("");
-    
+
     // Limpa o timeout pendente
     if (debounceTimeoutRef.current) {
       clearTimeout(debounceTimeoutRef.current);
     }
-    
+
     setFilters(emptyFilters);
     onFilterChange(emptyFilters);
   };
@@ -185,12 +183,7 @@ const CarFilters = ({
   };
 
   const scrollToTop = () => {
-    const isMobile = window.innerWidth <= 768;
-    if (isMobile) {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else {
-      window.scrollTo({ top: 500, behavior: 'smooth' });
-    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   // Função para atualizar preços com debounce
@@ -202,22 +195,22 @@ const CarFilters = ({
     debounceTimeoutRef.current = setTimeout(() => {
       const minNumeric = minValue ? parseInt(minValue.replace(/\D/g, '')) : 0;
       const maxNumeric = maxValue ? parseInt(maxValue.replace(/\D/g, '')) : 1000000;
-      
+
       // Validação: não permite mínimo maior que máximo
       let finalMin = minNumeric;
       let finalMax = maxNumeric;
-      
+
       if (minNumeric > maxNumeric && maxValue !== '') {
         finalMin = maxNumeric;
       }
-      
+
       const newFilters = {
         ...filters,
         priceMin: finalMin > 0 ? finalMin.toLocaleString('pt-BR') : '',
         priceMax: finalMax < 1000000 ? finalMax.toLocaleString('pt-BR') : '',
         priceRange: [finalMin, finalMax] as [number, number]
       };
-      
+
       setFilters(newFilters);
       onFilterChange(newFilters);
     }, 800); // 800ms de delay
@@ -279,15 +272,7 @@ const CarFilters = ({
     setCurrentY(0);
   }, [isDragging, isExpanded, startY, currentY]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsScrolled(scrollY > 300);
-    };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -319,9 +304,7 @@ const CarFilters = ({
     };
   }, [isExpanded]);
 
-  useEffect(() => {
-    setIsStockOptionsExpanded(false);
-  }, [isScrolled]);
+
 
   // Cleanup do timeout quando o componente for desmontado
   useEffect(() => {
@@ -393,12 +376,7 @@ const CarFilters = ({
 
         <div className="mb-0 md:mb-2">
           <div className="max-w-5xl mx-auto">
-            <div
-              className={`transition-all duration-300 ease-in-out ${isScrolled
-                ? "md:max-h-96 md:opacity-100 max-h-0 opacity-0 overflow-hidden"
-                : "max-h-96 opacity-100"
-                }`}
-            >
+            <div className="max-h-96 opacity-100">
               <div className="hidden md:flex flex-row gap-3 md:gap-4 mb-2">
                 <Button
                   variant={filters.showAll ? "default" : "outline"}
@@ -502,85 +480,7 @@ const CarFilters = ({
               </div>
             </div>
 
-            {isScrolled && (
-              <div className="mb-2 md:hidden">
-                <div
-                  onClick={() =>
-                    setIsStockOptionsExpanded(!isStockOptionsExpanded)
-                  }
-                  className="flex items-center justify-center gap-1 py-2 cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors duration-200"
-                >
-                  <span className="underline decoration-1 underline-offset-2">
-                    Opções de Estoque
-                  </span>
-                  {isStockOptionsExpanded ? (
-                    <ChevronUp className="h-2 w-2" />
-                  ) : (
-                    <ChevronDown className="h-2 w-2" />
-                  )}
-                </div>
 
-                <div
-                  className={`overflow-hidden transition-all duration-300 ease-in-out ${isStockOptionsExpanded
-                    ? "max-h-96 opacity-100 mt-2"
-                    : "max-h-0 opacity-0"
-                    }`}
-                >
-                  <div className="space-y-2">
-                    {/* Estoque Completo sozinho na primeira linha */}
-                    <div className="w-full">
-                      <Button
-                        variant={filters.showAll ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleTagFilter("showAll")}
-                        className="w-full h-8 px-3 text-xs font-medium rounded-lg transition-all duration-200"
-                      >
-                        Estoque Completo
-                      </Button>
-                    </div>
-
-                    {/* Os outros 4 botões na segunda linha */}
-                    <div className="grid grid-cols-4 gap-1">
-                      <Button
-                        variant={filters.isZeroKm ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleTagFilter("isZeroKm")}
-                        className="h-8 px-1 text-xs font-medium rounded-lg transition-all duration-200"
-                      >
-                        Zero KM
-                      </Button>
-
-                      <Button
-                        variant={filters.isSemiNew ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleTagFilter("isSemiNew")}
-                        className="h-8 px-1 text-xs font-medium rounded-lg transition-all duration-200"
-                      >
-                        Semi Novo
-                      </Button>
-
-                      <Button
-                        variant={filters.isConsignment ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleTagFilter("isConsignment")}
-                        className="h-8 px-1 text-xs font-medium rounded-lg transition-all duration-200"
-                      >
-                        Repasse
-                      </Button>
-
-                      <Button
-                        variant={filters.showFavorites ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleFavoritesFilter()}
-                        className="h-8 px-1 text-xs font-medium rounded-lg transition-all duration-200"
-                      >
-                        Favoritos ({localFavorites.size})
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
@@ -797,7 +697,7 @@ const CarFilters = ({
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
-                      
+
                       setTempPriceMin(formattedValue);
                       updatePricesWithDebounce(formattedValue, tempPriceMax || filters.priceMax);
                     }}
@@ -815,7 +715,7 @@ const CarFilters = ({
                     onChange={(e) => {
                       const rawValue = e.target.value.replace(/\D/g, '');
                       const formattedValue = rawValue ? parseInt(rawValue).toLocaleString('pt-BR') : '';
-                      
+
                       setTempPriceMax(formattedValue);
                       updatePricesWithDebounce(tempPriceMin || filters.priceMin, formattedValue);
                     }}
@@ -853,8 +753,8 @@ const CarFilters = ({
           </div>
         </div>
 
-        <div className="mt-1 xs:mt-0.5 text-center border-t border-border/30 pt-1 xs:pt-0.5 md:pt-4">
-          <div className="flex items-center justify-center gap-2 mt-2 xs:justify-start md:justify-center">
+        <div className="mt-1 xs:mt-0 text-center border-t border-border/30 pt-1 xs:pt-0 md:pt-4">
+          <div className="flex items-center justify-center gap-2 mt-2 xs:mt-1 xs:justify-start md:justify-center">
             <Car className="h-4 w-4 md:h-5 md:w-5 text-primary" />
             <p className="text-sm xs:text-xs md:text-base font-medium text-muted-foreground">
               {totalCars}{" "}

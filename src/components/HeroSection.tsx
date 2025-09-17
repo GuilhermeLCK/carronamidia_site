@@ -2,13 +2,13 @@ const videoPresentation =
   "https://firebasestorage.googleapis.com/v0/b/database-img/o/Video_Apresentacao.mov?alt=media";
 
 import { useState, useEffect, useRef } from "react";
-import { Instagram, MessageCircle, MapPin } from "lucide-react";
 
 const HeroSection = () => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(false);
   const [loadError, setLoadError] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
@@ -41,6 +41,32 @@ const HeroSection = () => {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Detecta quando o menu de filtros fica sticky para ocultar o vídeo
+  useEffect(() => {
+    const handleScroll = () => {
+      // Procura pelo elemento dos filtros que tem classe sticky
+      const filtersElement = document.querySelector('#filters');
+      
+      if (filtersElement) {
+        const rect = filtersElement.getBoundingClientRect();
+        // Se o elemento dos filtros está no topo (sticky ativo), oculta o vídeo
+        if (rect.top <= 0) {
+          setIsHidden(true);
+        } else {
+          setIsHidden(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+
+
   const handleVideoLoad = () => {
     setIsLoaded(true);
     setLoadError(false);
@@ -55,6 +81,7 @@ const HeroSection = () => {
     <section
       ref={sectionRef}
       className="relative min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12"
+      style={{ display: isHidden ? 'none' : 'flex' }}
     >
       <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
         <div className="relative aspect-video xs:aspect-[16/10] md:aspect-video overflow-hidden rounded-3xl xs:rounded-2xl md:rounded-[2rem] transition-all duration-700 transform hover:scale-[1.02] xs:pb-12 md:pb-0">
@@ -88,9 +115,8 @@ const HeroSection = () => {
               muted
               loop
               playsInline
-              className={`w-full h-full xs:object-fill md:object-contain transition-opacity duration-500 ${
-                isLoaded && !loadError ? "opacity-100" : "opacity-0"
-              }`}
+              className={`w-full h-full xs:object-fill md:object-contain transition-opacity duration-500 ${isLoaded && !loadError ? "opacity-100" : "opacity-0"
+                }`}
               controls
               onLoadedData={handleVideoLoad}
               onError={handleVideoError}
