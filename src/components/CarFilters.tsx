@@ -180,10 +180,15 @@ const CarFilters = ({
   };
 
   const scrollToTop = () => {
-    window.scrollTo({ top: -200, behavior: 'smooth' });
-    setTimeout(() => {
-      window.scrollTo({ top: -200, behavior: 'auto' });
-    }, 100);
+    const carsGrid = document.querySelector('#cars-grid');
+    if (carsGrid) {
+      carsGrid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setTimeout(() => {
+        carsGrid.scrollIntoView({ behavior: 'auto', block: 'start' });
+      }, 100);
+    } else {
+      window.scrollTo({ top: -100, behavior: 'smooth' });
+    }
   };
 
 
