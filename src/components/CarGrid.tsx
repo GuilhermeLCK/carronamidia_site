@@ -285,12 +285,10 @@ const VirtualizedCarGrid = memo(
       return () => observer.disconnect();
     }, [page, totalPages, isLoadingMore]);
 
-    const loadMoreCars = useCallback(async () => {
+    const loadMoreCars = useCallback(() => {
       if (page >= totalPages || isLoadingMore) return;
 
       setIsLoadingMore(true);
-
-      await new Promise((resolve) => setTimeout(resolve, 300));
 
       const nextPage = page + 1;
       const endIndex = nextPage * itemsPerPage;

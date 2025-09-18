@@ -117,7 +117,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
 
   return (
     <Card
-      className={`group relative overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col xs:flex-row md:flex-col ${(() => {
+      className={`group relative overflow-hidden hover:shadow-lg transition-all duration-150 hover:-translate-y-1 flex flex-col xs:flex-row md:flex-col ${(() => {
         const tags = [
           car.isShielding && "Blindado",
           car.isZeroKm && "Zero KM",
