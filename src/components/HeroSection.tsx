@@ -50,7 +50,8 @@ const HeroSection = () => {
 
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
-        if (rect.top <= 0) {
+
+        if (rect.top <= 10) {
           setIsHidden(true);
           setHasBeenHidden(true);
         }
@@ -113,9 +114,8 @@ const HeroSection = () => {
               muted
               loop
               playsInline
-              className={`w-full h-full xs:object-fill md:object-contain transition-opacity duration-500 ${
-                isLoaded && !loadError ? "opacity-100" : "opacity-0"
-              }`}
+              className={`w-full h-full xs:object-contain md:object-contain transition-opacity duration-500 ${isLoaded && !loadError ? "opacity-100" : "opacity-0"
+                }`}
               controls
               onLoadedData={handleVideoLoad}
               onError={handleVideoError}
