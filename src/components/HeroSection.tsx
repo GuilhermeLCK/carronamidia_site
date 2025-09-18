@@ -1,5 +1,5 @@
 const videoPresentation =
-  "https://firebasestorage.googleapis.com/v0/b/database-img/o/Video_Apresentacao.mov?alt=media";
+  "https://firebasestorage.googleapis.com/v0/b/database-img/o/videoOriginal.mov?alt=media";
 
 import { useState, useEffect, useRef } from "react";
 
@@ -46,7 +46,7 @@ const HeroSection = () => {
     const handleScroll = () => {
       if (hasBeenHidden) return;
 
-      const filtersElement = document.querySelector('#filters');
+      const filtersElement = document.querySelector("#filters");
 
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
@@ -57,14 +57,12 @@ const HeroSection = () => {
       }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, [hasBeenHidden]);
-
-
 
   const handleVideoLoad = () => {
     setIsLoaded(true);
@@ -80,7 +78,7 @@ const HeroSection = () => {
     <section
       ref={sectionRef}
       className="relative min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12"
-      style={{ display: isHidden ? 'none' : 'flex' }}
+      style={{ display: isHidden ? "none" : "flex" }}
       id="hero-section"
     >
       <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
@@ -115,8 +113,9 @@ const HeroSection = () => {
               muted
               loop
               playsInline
-              className={`w-full h-full xs:object-fill md:object-contain transition-opacity duration-500 ${isLoaded && !loadError ? "opacity-100" : "opacity-0"
-                }`}
+              className={`w-full h-full xs:object-fill md:object-contain transition-opacity duration-500 ${
+                isLoaded && !loadError ? "opacity-100" : "opacity-0"
+              }`}
               controls
               onLoadedData={handleVideoLoad}
               onError={handleVideoError}
