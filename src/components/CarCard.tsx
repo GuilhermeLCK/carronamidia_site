@@ -61,14 +61,14 @@ interface CarCardProps {
 const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
   const formatCurrency = useCallback((value: string | number): string => {
     try {
-      if (!value || value === "" || value === "0") return "Consulte";
+      if (!value || value === "" || value === "0") return "Consulte valores";
 
       const numericValue =
         typeof value === "string"
           ? parseFloat(value.replace(/[^\d,.-]/g, "").replace(",", "."))
           : value;
 
-      if (isNaN(numericValue) || numericValue <= 0) return "Consulte";
+      if (isNaN(numericValue) || numericValue <= 0) return "Consulte valores";
 
       return new Intl.NumberFormat("pt-BR", {
         style: "currency",
@@ -78,7 +78,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
       }).format(numericValue);
     } catch (error) {
       console.warn("Erro ao formatar moeda:", error);
-      return "Consulte";
+      return "Consulte valores";
     }
   }, []);
 
@@ -153,7 +153,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
         {isRecentlyAdded && (
           <div className="absolute top-2 right-2 xs:top-1 xs:right-1 z-20">
             <Badge
-              className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 font-bold text-xs xs:text-[8px] md:text-sm px-3 xs:px-1.5 md:px-4 py-1 xs:py-0.5 md:py-1.5 shadow-lg animate-pulse"
+              className="bg-gradient-to-r from-red-500 to-orange-500 text-white border-0 font-bold text-[10px] xs:text-[8px] px-2 xs:px-1.5 py-0.5 xs:py-0.5 shadow-lg animate-pulse"
               style={{
                 fontFamily: "'Inter', 'Roboto', sans-serif",
                 boxShadow: "0 0 20px rgba(239, 68, 68, 0.6)",
@@ -253,7 +253,9 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                 ) : (
                   <>
                     <div className="flex flex-wrap gap-0.5 xs:gap-0.5 md:gap-1 mb-2 xs:mb-1 md:mb-3 min-h-4 max-w-full">
-                      {car.isSemiNovo && (
+                      <div className="text-sm xs:text-base md:text-sm font-bold text-red-600 mb-1 xs:mb-0.5">
+                        {formatCurrency(car.price || "")}
+                      </div>{car.isSemiNovo && (
                         <Badge
                           className="bg-gray-100 text-black text-xs px-2 py-1 font-medium shadow-sm border-0 touch-manipulation select-none pointer-events-none"
                           style={{
@@ -305,9 +307,7 @@ const CarCard = memo(function CarCard({ car, favoritesManager }: CarCardProps) {
                         </Badge>
                       )}
                     </div>
-                    <div className="text-sm xs:text-base md:text-sm font-bold text-red-600 mb-1 xs:mb-0.5">
-                      {formatCurrency(car.price || "")}
-                    </div>
+
                   </>
                 )}
               </>
