@@ -51,7 +51,7 @@ const HeroSection = () => {
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
 
-        let number = window.innerWidth < 768 ? -460 : 0;
+        let number = window.innerWidth < 768 ? 0 : 0;
         if (rect.top <= number) {
           setIsHidden(true);
           setHasBeenHidden(true);
@@ -82,7 +82,7 @@ const HeroSection = () => {
       id="hero-section"
       className={`flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12 transition-all duration-700 ease-in-out overflow-hidden
     ${isHidden
-          ? "opacity-0 h-0 py-0 mt-0 pointer-events-none"
+          ? "opacity-0 max-h-0 py-0 mt-0 pointer-events-none"
           : "relative min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] opacity-100"
         }`}
     >

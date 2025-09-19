@@ -569,7 +569,7 @@ const CarFilters = ({
                     SUV de Grande Porte
                   </SelectItem>
                   <SelectItem
-                    value="SUV de Médio Porte"
+                    value="SUV de Medio Porte"
                     className="text-base xs:text-xs md:text-sm"
                   >
                     SUV de Médio Porte
