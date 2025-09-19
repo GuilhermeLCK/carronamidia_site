@@ -23,9 +23,14 @@ const CarGrid = ({
   favoritesManager,
   onTotalCarsChange,
 }: CarGridProps) => {
+
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [isHidden, setIsHidden] = useState(false);
+  const [hasBeenHidden, setHasBeenHidden] = useState(false);
+
 
   const fetchCars = async () => {
     try {
@@ -159,6 +164,28 @@ const CarGrid = ({
     }
   }, [filteredAndSortedCars.length, onTotalCarsChange]);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      if (hasBeenHidden) return;
+
+      const filtersElement = document.querySelector("#cars-grid");
+
+      if (filtersElement) {
+        const rect = filtersElement.getBoundingClientRect();
+        if (rect.top <= 0) {
+          setIsHidden(true);
+          setHasBeenHidden(true);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [hasBeenHidden]);
+
   if (loading) {
     return (
       <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-px xs:py-px md:py-3 ">
@@ -200,44 +227,54 @@ const CarGrid = ({
     );
   }
 
-  return (
-    <div
-      id="cars-grid"
-      className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2 min-h-full"
-    >
-      {error && cars.length > 0 && (
-        <Alert className="mb-6 border-orange-200 bg-orange-50">
-          <AlertCircle className="h-4 w-4 text-orange-600" />
-          <AlertDescription className="text-orange-800">
-            Conectado ao modo offline. Exibindo dados locais.
-            <Button
-              variant="link"
-              size="sm"
-              onClick={fetchCars}
-              className="p-0 h-auto text-orange-600 underline ml-1"
-            >
-              Tentar reconectar
-            </Button>
-          </AlertDescription>
-        </Alert>
-      )}
 
-      {filteredAndSortedCars.length > 0 && (
-        <div>
-          <VirtualizedCarGrid
-            cars={filteredAndSortedCars}
-            favoritesManager={favoritesManager}
-          />
-        </div>
-      )}
-      {filteredAndSortedCars.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-gray-500 text-lg">
-            Nenhum carro encontrado com os filtros selecionados.
-          </p>
-        </div>
-      )}
-    </div>
+  return (
+    <>
+      <div
+        style={{
+          height: isHidden ? 0 : "4vh",
+          transition: "height 0.7s ease-in-out",
+        }}
+      />
+      <div
+        id="cars-grid"
+        className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2"
+      >
+        {error && cars.length > 0 && (
+          <Alert className="mb-6 border-orange-200 bg-orange-50">
+            <AlertCircle className="h-4 w-4 text-orange-600" />
+            <AlertDescription className="text-orange-800">
+              Conectado ao modo offline. Exibindo dados locais.
+              <Button
+                variant="link"
+                size="sm"
+                onClick={fetchCars}
+                className="p-0 h-auto text-orange-600 underline ml-1"
+              >
+                Tentar reconectar
+              </Button>
+            </AlertDescription>
+          </Alert>
+        )}
+
+        {filteredAndSortedCars.length > 0 && (
+          <div>
+            <VirtualizedCarGrid
+              cars={filteredAndSortedCars}
+              favoritesManager={favoritesManager}
+            />
+          </div>
+        )}
+        {filteredAndSortedCars.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">
+              Nenhum carro encontrado com os filtros selecionados.
+            </p>
+          </div>
+        )}
+      </div>
+    </>
+
   );
 };
 
