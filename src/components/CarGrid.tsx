@@ -70,9 +70,8 @@ const CarGrid = ({
         .split(/\s+/)
         .filter((term) => term.length > 0);
       filtered = filtered.filter((car) => {
-        const carText = `${car.model || ""} ${car.brand || ""} ${
-          car.description || ""
-        } ${car.title || ""}`.toLowerCase();
+        const carText = `${car.model || ""} ${car.brand || ""} ${car.description || ""
+          } ${car.title || ""}`.toLowerCase();
         return searchTerms.every((term) => carText.includes(term));
       });
     }

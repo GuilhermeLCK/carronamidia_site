@@ -78,10 +78,11 @@ const HeroSection = () => {
   return (
     <section
       ref={sectionRef}
-      className={`relative flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12 transition-all duration-700 ease-in-out overflow-hidden ${isHidden
-        ? "min-h-0 max-h-0 opacity-0 py-0 mt-0"
-        : "min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] opacity-100"
-        }`}
+      className={`flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12 transition-all duration-700 ease-in-out overflow-hidden ${
+        isHidden 
+          ? "absolute -top-full left-0 right-0 opacity-0 pointer-events-none z-[-1]" 
+          : "relative min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] opacity-100"
+      }`}
       id="hero-section"
     >
       <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
