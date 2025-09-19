@@ -27,11 +27,6 @@ const CarGrid = ({
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const [isHidden, setIsHidden] = useState(false);
-  const [hasBeenHidden, setHasBeenHidden] = useState(false);
-
-
   const fetchCars = async () => {
     try {
       setLoading(true);
@@ -164,28 +159,6 @@ const CarGrid = ({
     }
   }, [filteredAndSortedCars.length, onTotalCarsChange]);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      if (hasBeenHidden) return;
-
-      const filtersElement = document.querySelector("#cars-grid");
-
-      if (filtersElement) {
-        const rect = filtersElement.getBoundingClientRect();
-        if (rect.top <= 0) {
-          setIsHidden(true);
-          setHasBeenHidden(true);
-        }
-      }
-    };
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [hasBeenHidden]);
-
   if (loading) {
     return (
       <div className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-px xs:py-px md:py-3 ">
@@ -227,9 +200,9 @@ const CarGrid = ({
     );
   }
 
-
   return (
     <>
+
       <div
         id="cars-grid"
         className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2"

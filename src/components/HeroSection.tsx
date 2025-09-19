@@ -51,7 +51,8 @@ const HeroSection = () => {
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
 
-        let number = isMobile ? -450 : 0;
+        let number = window.innerWidth < 768 ? -400 : 0;
+        console.log(number)
         if (rect.top <= number) {
           setIsHidden(true);
           setHasBeenHidden(true);
