@@ -231,12 +231,6 @@ const CarGrid = ({
   return (
     <>
       <div
-        style={{
-          height: isHidden ? 0 : "4vh",
-          transition: "height 0.7s ease-in-out",
-        }}
-      />
-      <div
         id="cars-grid"
         className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2"
       >
