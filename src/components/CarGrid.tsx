@@ -204,7 +204,7 @@ const CarGrid = ({
     <>
       <div
         id="cars-grid"
-        className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:mb-[30vh]"
+        className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2"
       >
         {error && cars.length > 0 && (
           <Alert className="mb-6 border-orange-200 bg-orange-50">
