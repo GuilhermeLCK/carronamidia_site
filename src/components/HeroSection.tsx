@@ -50,7 +50,9 @@ const HeroSection = () => {
 
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
-        if (rect.top <= -100) {
+
+        let number = isMobile ? -250 : 0;
+        if (rect.top <= number) {
           setIsHidden(true);
           setHasBeenHidden(true);
         }
