@@ -80,11 +80,14 @@ const HeroSection = () => {
     <section
       ref={sectionRef}
       id="hero-section"
-      className={`flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12 transition-all duration-700 ease-in-out overflow-hidden
+      className={`relative flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12 min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] transition-all duration-700 ease-in-out overflow-hidden
     ${isHidden
-          ? "opacity-0 max-h-0 py-0 mt-0 pointer-events-none"
-          : "relative min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] opacity-100"
+          ? "opacity-0 pointer-events-none"
+          : "opacity-100"
         }`}
+      style={{
+        visibility: isHidden ? 'hidden' : 'visible'
+      }}
     >
 
       <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
