@@ -50,7 +50,7 @@ const HeroSection = () => {
 
       if (filtersElement) {
         const rect = filtersElement.getBoundingClientRect();
-        if (rect.top <= 0) {
+        if (rect.top <= -100) {
           setIsHidden(true);
           setHasBeenHidden(true);
         }
