@@ -81,21 +81,19 @@ const HeroSection = () => {
       ref={sectionRef}
       id="hero-section"
       className={`relative flex items-center justify-center py-8 xs:py-0 md:py-12 px-4 xs:px-0 md:px-4 mt-8 xs:mt-4 md:mt-12 min-h-[70vh] xs:min-h-[30vh] md:min-h-[80vh] transition-all duration-700 ease-in-out overflow-hidden
-    ${isHidden
-          ? "opacity-0 pointer-events-none"
-          : "opacity-100"
-        }`}
-      style={{
-        visibility: isHidden ? 'hidden' : 'visible'
-      }}
+    `}
+      //   style={{
+      //     visibility: isHidden ? "hidden" : "visible",
+      //   }}
     >
-
       <div className="w-full max-w-6xl xs:w-[85%] xs:px-0 md:max-w-6xl mx-auto">
         <div className="relative aspect-[5/4] overflow-hidden rounded-3xl xs:rounded-2xl md:rounded-[2rem] transition-all duration-700 transform hover:scale-[1.02]">
           {!isLoaded && (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center z-10">
               <div className="w-16 h-16 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-white text-sm opacity-75">Carregando vídeo...</p>
+              <p className="text-white text-sm opacity-75">
+                Carregando vídeo...
+              </p>
               <div className="w-48 h-2 bg-gray-700 rounded-full mt-2 overflow-hidden">
                 <div
                   className="h-full bg-primary rounded-full animate-pulse"
@@ -123,8 +121,9 @@ const HeroSection = () => {
                 muted
                 loop
                 playsInline
-                className={`w-full h-full object-contain transition-opacity duration-500 ${isLoaded && !loadError ? "opacity-100" : "opacity-0"
-                  }`}
+                className={`w-full h-full object-contain transition-opacity duration-500 ${
+                  isLoaded && !loadError ? "opacity-100" : "opacity-0"
+                }`}
                 controls
                 onLoadedData={handleVideoLoad}
                 onError={handleVideoError}
@@ -134,8 +133,7 @@ const HeroSection = () => {
           )}
         </div>
       </div>
-
-    </section >
+    </section>
   );
 };
 
