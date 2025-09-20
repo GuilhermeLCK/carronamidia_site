@@ -23,7 +23,6 @@ const CarGrid = ({
   favoritesManager,
   onTotalCarsChange,
 }: CarGridProps) => {
-
   const [cars, setCars] = useState<Car[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -70,8 +69,9 @@ const CarGrid = ({
         .split(/\s+/)
         .filter((term) => term.length > 0);
       filtered = filtered.filter((car) => {
-        const carText = `${car.model || ""} ${car.brand || ""} ${car.description || ""
-          } ${car.title || ""}`.toLowerCase();
+        const carText = `${car.model || ""} ${car.brand || ""} ${
+          car.description || ""
+        } ${car.title || ""}`.toLowerCase();
         return searchTerms.every((term) => carText.includes(term));
       });
     }
@@ -204,7 +204,7 @@ const CarGrid = ({
     <>
       <div
         id="cars-grid"
-        className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:-mt-2"
+        className="w-[90%] xs:w-[99%] mx-auto px-4 xs:px-2 py-0 xs:py-3 md:py-12 mt-0 xs:mt-2"
       >
         {error && cars.length > 0 && (
           <Alert className="mb-6 border-orange-200 bg-orange-50">
@@ -240,7 +240,6 @@ const CarGrid = ({
         )}
       </div>
     </>
-
   );
 };
 
